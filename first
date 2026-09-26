@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B3547">
+<meta name="color-scheme" content="light">
+<title>MedEx — تئوری عفونی</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--navy:#0B3547;--blue:#164C63;--teal:#19878D;--teal-soft:#8AD9D4;--soft:#EAF5F6;--text:#17242C;--muted:#849198;--bg:#F5F8F9;--white:#fff;--line:#E3EBEE;--shadow:0 12px 34px rgba(11,53,71,.065);--shadow-hover:0 10px 26px rgba(11,53,71,.10);--success:#1e8449;--success-bg:#E8F8F0;--success-line:#27ae60;--danger:#c0392b;--danger-bg:#FDEDEC;--danger-line:#e74c3c;--warn:#b7950b;--warn-bg:#FEF9E7}
+html,body{min-height:100%;background:#E9EEF0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:14px}
+input,select{font:inherit;color:inherit}
+.app{width:100%;max-width:480px;min-height:100vh;min-height:100dvh;margin:auto;background:var(--bg);overflow:hidden;position:relative}
+.page{display:none;min-height:100vh;min-height:100dvh;padding:24px 21px 40px;position:relative}
+.page.active{display:flex;flex-direction:column;animation:pageIn .28s cubic-bezier(.22,.61,.36,1)}
+@keyframes pageIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+
+/* WELCOME */
+.welcome{justify-content:center;align-items:center;text-align:center;padding:35px;overflow:hidden;background:radial-gradient(circle at 50% 38%,rgba(211,235,241,.85),transparent 46%),var(--bg)}
+.welcome::before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(105,190,199,.10);filter:blur(50px);top:32%;left:50%;transform:translate(-50%,-50%);animation:ambient 6s ease-in-out infinite}
+.welcome::after{content:"";position:absolute;inset:0;opacity:.20;pointer-events:none;background-image:radial-gradient(#9bb7bf .7px,transparent .7px);background-size:22px 22px;-webkit-mask-image:linear-gradient(to bottom,transparent 12%,#000 50%,transparent 88%);mask-image:linear-gradient(to bottom,transparent 12%,#000 50%,transparent 88%)}
+@keyframes ambient{50%{transform:translate(-50%,-50%) scale(1.08);opacity:.85}}
+.logo-wrap{position:relative;z-index:1;width:min(62vw,224px);margin-bottom:26px;animation:logoIn .8s cubic-bezier(.16,1,.3,1) both,heartbeat 3.6s 1.2s ease-in-out infinite}
+.logo-svg{display:block;width:100%;height:auto;overflow:visible}
+.logo-svg .e-back{fill:none;stroke:var(--teal);stroke-width:4;stroke-linejoin:miter;stroke-linecap:square;opacity:.15}
+.logo-svg .m-outer{fill:none;stroke:var(--navy);stroke-width:5;stroke-linejoin:miter;stroke-linecap:square}
+.logo-svg .m-core{fill:none;stroke:var(--navy);stroke-width:1.6;stroke-linejoin:miter;stroke-linecap:square}
+.logo-svg .pulse-line{fill:none;stroke:var(--teal);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:320;stroke-dashoffset:320;animation:draw 1.4s .5s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.logo-svg .m-text{fill:var(--navy);font-weight:800;letter-spacing:-1.2px}
+.logo-svg .m-text-accent{fill:var(--teal)}
+@keyframes logoIn{0%{opacity:0;transform:translateY(16px) scale(.84) rotate(-3deg)}60%{opacity:1;transform:translateY(-2px) scale(1.02) rotate(.5deg)}100%{transform:none}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}6%{transform:scale(1.015)}12%{transform:scale(1)}18%{transform:scale(1.02)}24%{transform:scale(1)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.start-btn{margin-top:34px;width:100%;max-width:305px;height:58px;border-radius:18px;background:linear-gradient(135deg,#1B5B73,#103E51);color:#fff;font-size:15.5px;font-weight:700;letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(16,62,81,.20),inset 0 1px 0 rgba(255,255,255,.14);transition:transform .16s ease,box-shadow .16s ease;animation:fadeUp .55s .4s both;z-index:1}
+.start-btn:hover{box-shadow:0 16px 34px rgba(16,62,81,.25)}
+.start-btn:active{transform:scale(.965);box-shadow:0 8px 18px rgba(16,62,81,.18)}
+
+/* HEADER */
+.header{display:flex;align-items:center;gap:13px;margin-bottom:24px;animation:fadeUp .3s ease-out}
+.back{width:44px;height:44px;flex-shrink:0;border:1px solid var(--line);border-radius:14px;background:#fff;color:#65757D;font-size:24px;font-weight:400;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(20,40,50,.04);transition:transform .15s,background .15s;padding-bottom:3px}
+.back:hover{background:#F0F5F7}
+.back:active{transform:scale(.9);background:#E8EFF2}
+.header-text h1{font-size:23px;font-weight:750;letter-spacing:-.5px;line-height:1.2}
+.header-text p{margin-top:5px;color:var(--muted);font-size:12px}
+
+/* CONTEXT */
+.context{display:flex;align-items:center;justify-content:space-between;margin:-4px 2px 16px;padding:11px 13px;border:1px solid #E0EAED;border-radius:14px;background:rgba(255,255,255,.6);color:#74848B;font-size:10.5px}
+.context strong{color:var(--blue);font-weight:700}
+.context .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(25,135,141,.08);display:inline-block;margin-left:7px;vertical-align:middle}
+
+/* CARDS */
+.course-list,.main-options,.question-types{display:flex;flex-direction:column;gap:13px}
+.course-card,.main-card,.question-card{border:1px solid var(--line);background:#fff;box-shadow:var(--shadow);opacity:0;transform:translateY(12px);animation:cardIn .42s cubic-bezier(.22,.61,.36,1) forwards;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;width:100%}
+.course-card:hover,.main-card:hover,.question-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover);border-color:#D8E4E8}
+.course-card:active,.main-card:active,.question-card:active{transform:scale(.978);box-shadow:0 5px 15px rgba(18,48,62,.07)}
+@keyframes cardIn{to{opacity:1;transform:none}}
+.course-card{border-radius:22px;padding:19px;display:flex;align-items:center;justify-content:space-between;text-align:right;gap:12px}
+.course-card:nth-child(2){animation-delay:.07s}
+.course-info{display:flex;align-items:center;gap:15px;min-width:0;flex:1}
+.course-icon,.main-icon{display:grid;place-items:center;flex-shrink:0;border-radius:17px;background:linear-gradient(145deg,#F0F8FA,#E4F0F3);color:var(--blue)}
+.course-icon{width:52px;height:52px}
+.course-icon svg,.main-icon svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.course-name{font-size:16px;font-weight:680;line-height:1.3}
+.course-status{margin-top:5px;color:var(--muted);font-size:11px}
+.arrow{color:#AAB5BA;font-size:22px;padding-bottom:4px;flex-shrink:0}
+.main-card{min-height:112px;border-radius:23px;padding:21px;display:flex;align-items:center;gap:17px;text-align:right}
+.main-card:nth-child(2){animation-delay:.07s}
+.main-card:nth-child(3){animation-delay:.14s}
+.main-icon{width:57px;height:57px;border-radius:18px}
+.main-card h2{font-size:17px;font-weight:680;line-height:1.3}
+.main-card p{margin-top:6px;color:var(--muted);font-size:11.5px;line-height:1.5}
+.main-card > div:last-child{min-width:0;flex:1}
+.question-card{position:relative;border-radius:22px;padding:24px;text-align:right}
+.question-card:nth-child(2){animation-delay:.07s}
+.question-card::after{content:"‹";position:absolute;left:21px;top:50%;transform:translateY(-50%);color:#AAB5BA;font-size:20px}
+.question-card h2{font-size:17px;font-weight:680}
+.question-card p{margin-top:7px;color:var(--muted);font-size:12px;padding-left:24px;line-height:1.6}
+
+/* COURSE HERO */
+.course-hero{position:relative;overflow:hidden;margin:-4px 0 17px;padding:18px 18px 14px;border-radius:23px;background:linear-gradient(145deg,#0B3547,#174D62);color:#fff;box-shadow:0 15px 32px rgba(11,53,71,.16)}
+.course-hero::after{content:"";position:absolute;width:130px;height:130px;border:1px solid rgba(255,255,255,.08);border-radius:50%;left:-45px;bottom:-83px}
+.course-hero small{color:var(--teal-soft);font-size:9px;letter-spacing:1.4px;font-weight:800}
+.course-hero h2{margin-top:4px;font-size:21px;font-weight:700}
+.course-hero p{margin-top:4px;font-size:11px;color:rgba(255,255,255,.7)}
+.hero-line{display:block;width:100%;height:17px;margin-top:10px}
+.hero-line path{fill:none;stroke:var(--teal-soft);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:180;stroke-dashoffset:180;animation:draw 1s .2s ease forwards}
+
+/* EMPTY */
+.empty-box{border:1px dashed #D4E0E4;border-radius:21px;padding:42px 22px;text-align:center;background:rgba(255,255,255,.6);color:#8C989E;font-size:13px;line-height:2;animation:fadeUp .35s ease-out}
+.empty-icon{width:52px;height:52px;margin:0 auto 12px;border-radius:16px;background:var(--soft);display:grid;place-items:center;color:var(--teal);font-size:23px}
+.footer-note{text-align:center;color:#A1ADB2;font-size:10.5px;margin-top:auto;padding-top:28px}
+
+/* ============ QUESTION BANK ============ */
+.qbank{display:flex;flex-direction:column;gap:12px;padding-bottom:20px}
+.qbank-meta{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;margin-bottom:8px;border:1px solid #E0EAED;border-radius:14px;background:rgba(255,255,255,.6);color:#74848B;font-size:10.5px;animation:fadeUp .3s ease-out}
+.qbank-meta strong{color:var(--blue);font-weight:700}
+.qbank-section{margin-top:14px;border-radius:14px;background:linear-gradient(135deg,#164C63,#0B3547);color:#fff;padding:11px 16px;font-size:13px;font-weight:700;letter-spacing:-.2px;box-shadow:0 8px 20px rgba(11,53,71,.14);animation:cardIn .35s cubic-bezier(.22,.61,.36,1) both}
+.qbank-section:first-child{margin-top:0}
+
+.q-card{border:1px solid var(--line);background:#fff;border-radius:16px;padding:15px 16px;box-shadow:0 4px 14px rgba(11,53,71,.04);animation:cardIn .35s cubic-bezier(.22,.61,.36,1) both}
+.q-card-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:11px}
+.q-card-num{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:24px;padding:0 8px;border-radius:8px;background:linear-gradient(145deg,#1D647E,#0B394C);color:#fff;font-size:11.5px;font-weight:800;letter-spacing:-.2px;box-shadow:0 3px 8px rgba(11,53,71,.18)}
+.q-card-text{flex:1;min-width:0;font-size:13.5px;font-weight:700;color:var(--navy);line-height:1.7}
+.q-card-options{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:11px}
+.q-card-options li{padding:8px 12px;border-radius:9px;background:#F8FBFD;font-size:12.5px;line-height:1.6;color:#2c3e50;border-right:3px solid #D5E3EC;display:flex;gap:8px;align-items:flex-start}
+.q-card-options li .opt-l{flex-shrink:0;font-weight:700;color:var(--blue);min-width:16px}
+
+.q-reveal{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;border-radius:11px;background:linear-gradient(135deg,#F0F8FA,#E4F0F3);color:var(--blue);font-size:12.5px;font-weight:700;border:1px solid #D8E7EC;transition:all .15s}
+.q-reveal:hover{background:linear-gradient(135deg,#E6F2F5,#DBEAEE)}
+.q-reveal:active{transform:scale(.98)}
+.q-reveal .arrow-ico{transition:transform .2s ease;font-size:11px}
+.q-reveal.open .arrow-ico{transform:rotate(180deg)}
+
+.q-answer-box{margin-top:11px;padding:12px 14px;border-radius:11px;background:#EAF6FF;border-right:4px solid var(--blue);animation:qBody .25s ease-out}
+.q-answer-box .lbl{font-weight:800;color:var(--navy);font-size:12px;display:block;margin-bottom:6px}
+.q-answer-box .txt{font-size:12.5px;line-height:1.8;color:#34495e}
+@keyframes qBody{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+.q-tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;margin-right:6px;vertical-align:middle}
+.q-tag-easy{background:#D5F5E3;color:#1e8449}
+.q-tag-medium{background:#FEF9E7;color:#b7950b}
+.q-tag-hard{background:#FDEDEC;color:#c0392b}
+
+/* ============ SUMMARY (Mindmap) ============ */
+.mindmap{display:flex;flex-direction:column;gap:12px;padding-bottom:20px}
+.mm-section{border:1px solid var(--line);background:#fff;border-radius:16px;box-shadow:var(--shadow);overflow:hidden;animation:cardIn .4s cubic-bezier(.22,.61,.36,1) both;transition:box-shadow .18s}
+.mm-section:hover{box-shadow:var(--shadow-hover)}
+.mm-head{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,#F7FBFC,#EFF6F8);user-select:none;transition:background .15s}
+.mm-head::-webkit-details-marker{display:none}
+.mm-head:hover{background:linear-gradient(135deg,#F0F7F9,#E5EFF2)}
+.mm-num{flex-shrink:0;width:30px;height:30px;border-radius:9px;background:linear-gradient(145deg,#1D647E,#0B394C);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;box-shadow:0 4px 10px rgba(11,53,71,.18)}
+.mm-title{flex:1;min-width:0;font-size:14.5px;font-weight:700;color:var(--navy);line-height:1.3}
+.mm-chev{flex-shrink:0;color:var(--teal);font-size:15px;transition:transform .2s ease}
+.mm-section[open] .mm-chev{transform:rotate(180deg)}
+.mm-body{padding:14px 16px 18px;border-top:1px solid var(--line);background:#FDFEFE}
+.mm-branch{margin-bottom:14px}
+.mm-branch:last-child{margin-bottom:0}
+.mm-branch-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--blue);margin-bottom:8px;padding-bottom:6px;border-bottom:1px dashed #D5E3EC}
+.mm-branch-title::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(25,135,141,.12)}
+.mm-list{list-style:none;display:flex;flex-direction:column;gap:6px;padding-right:14px;position:relative}
+.mm-list::before{content:"";position:absolute;right:0;top:6px;bottom:6px;width:1px;background:linear-gradient(to bottom,transparent,#D5E3EC 20%,#D5E3EC 80%,transparent)}
+.mm-list li{position:relative;font-size:12.5px;line-height:1.7;color:#34495e;padding-right:10px}
+.mm-list li::before{content:"";position:absolute;right:-14px;top:11px;width:8px;height:1px;background:#D5E3EC}
+.mm-list li strong{color:var(--navy);font-weight:700}
+.mm-list li em{color:var(--teal);font-style:normal;font-weight:600}
+
+/* ============ TEST SETUP ============ */
+.setup-card{border:1px solid var(--line);background:#fff;border-radius:18px;padding:18px;box-shadow:var(--shadow);animation:cardIn .4s cubic-bezier(.22,.61,.36,1) both;margin-bottom:14px}
+.setup-group{margin-bottom:18px}
+.setup-group:last-child{margin-bottom:0}
+.setup-label{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:9px}
+.setup-options{display:flex;flex-wrap:wrap;gap:8px}
+.setup-chip{flex:1;min-width:0;padding:10px 8px;border:1.5px solid var(--line);border-radius:11px;background:#fff;color:#556;font-size:12.5px;font-weight:600;text-align:center;transition:all .15s;cursor:pointer;position:relative}
+.setup-chip:hover{border-color:#B7CBD2;background:#FAFCFD}
+.setup-chip:active{transform:scale(.97)}
+.setup-chip.active{border-color:var(--teal);background:var(--soft);color:var(--navy);box-shadow:0 4px 12px rgba(25,135,141,.15)}
+.setup-chip.active::after{content:"✓";position:absolute;top:-6px;left:-6px;width:18px;height:18px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;box-shadow:0 2px 6px rgba(25,135,141,.35)}
+.setup-info{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,#F0F8FA,#E4F0F3);margin-bottom:14px;font-size:12px}
+.setup-info span{color:var(--blue);font-weight:600}
+.setup-info strong{color:var(--navy);font-weight:800;font-size:14px}
+
+.resume-box{display:flex;align-items:center;gap:11px;padding:13px 14px;border-radius:13px;background:linear-gradient(135deg,#FEF9E7,#FDF3D6);border:1px solid #F0E0A0;margin-bottom:14px;animation:fadeUp .3s ease-out}
+.resume-box .ico{flex-shrink:0;width:32px;height:32px;border-radius:10px;background:var(--warn-bg);color:var(--warn);display:grid;place-items:center;font-size:16px}
+.resume-box .txt{flex:1;min-width:0;font-size:12px;color:#7a5a00;font-weight:600;line-height:1.5}
+.resume-box button{flex-shrink:0;padding:8px 12px;border-radius:9px;background:var(--warn);color:#fff;font-size:11.5px;font-weight:700;transition:transform .15s}
+.resume-box button:active{transform:scale(.95)}
+
+.cta-btn{width:100%;height:56px;border-radius:15px;background:linear-gradient(135deg,#1B5B73,#103E51);color:#fff;font-size:15px;font-weight:700;letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 12px 26px rgba(16,62,81,.20),inset 0 1px 0 rgba(255,255,255,.14);transition:transform .16s ease,box-shadow .16s ease}
+.cta-btn:hover{box-shadow:0 16px 34px rgba(16,62,81,.25)}
+.cta-btn:active{transform:scale(.97);box-shadow:0 8px 18px rgba(16,62,81,.18)}
+.cta-btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.cta-btn.secondary{background:#fff;color:var(--navy);border:1.5px solid var(--line);box-shadow:0 6px 16px rgba(20,40,50,.04)}
+.cta-btn.secondary:hover{background:#F6FAFB;box-shadow:0 8px 20px rgba(20,40,50,.08)}
+
+/* ============ TEST RUNNING ============ */
+.test-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:13px;background:#fff;border:1px solid var(--line);box-shadow:0 6px 16px rgba(20,40,50,.04);margin-bottom:14px;animation:fadeUp .3s ease-out}
+.test-topbar .q-counter{font-size:12px;color:var(--muted);font-weight:600}
+.test-topbar .q-counter strong{color:var(--navy);font-weight:800}
+.test-topbar .q-timer{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums;letter-spacing:.5px}
+.test-topbar .q-timer.warn{color:var(--danger)}
+.q-progress{height:5px;background:#E8EFF2;border-radius:99px;overflow:hidden;margin-bottom:16px}
+.q-progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:99px;transition:width .3s ease}
+.test-q{border:1px solid var(--line);background:#fff;border-radius:18px;padding:18px;box-shadow:var(--shadow);animation:cardIn .35s cubic-bezier(.22,.61,.36,1) both;margin-bottom:14px}
+.test-q-text{font-size:14.5px;font-weight:700;color:var(--navy);line-height:1.7;margin-bottom:14px}
+.test-opt{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;margin-bottom:8px;cursor:pointer;transition:all .15s;text-align:right;width:100%;font-size:13px;line-height:1.6;color:#2c3e50}
+.test-opt:hover{border-color:#B7CBD2;background:#FAFCFD}
+.test-opt:active{transform:scale(.99)}
+.test-opt .opt-letter{flex-shrink:0;width:26px;height:26px;border-radius:8px;background:var(--soft);color:var(--blue);display:grid;place-items:center;font-size:11.5px;font-weight:800;transition:all .15s}
+.test-opt .opt-text{flex:1;min-width:0;padding-top:1px}
+.test-opt.selected{border-color:var(--blue);background:#EAF6FF}
+.test-opt.selected .opt-letter{background:var(--blue);color:#fff}
+.test-nav{display:flex;gap:10px;margin-top:4px}
+.test-nav .cta-btn{height:50px;font-size:14px}
+.test-nav .cta-btn.prev{flex:0 0 40%;background:#fff;color:var(--navy);border:1.5px solid var(--line);box-shadow:none}
+.test-nav .cta-btn.prev:hover{background:#F6FAFB}
+.test-nav .cta-btn.next{flex:1}
+
+/* ============ RESULT ============ */
+.result-hero{text-align:center;padding:24px 18px;border-radius:22px;background:linear-gradient(145deg,#0B3547,#174D62);color:#fff;box-shadow:0 15px 32px rgba(11,53,71,.16);margin-bottom:16px;position:relative;overflow:hidden;animation:cardIn .5s cubic-bezier(.22,.61,.36,1) both}
+.result-hero::after{content:"";position:absolute;width:150px;height:150px;border:1px solid rgba(255,255,255,.08);border-radius:50%;left:-55px;bottom:-90px}
+.result-hero small{color:var(--teal-soft);font-size:10px;letter-spacing:1.6px;font-weight:800}
+.result-percent{font-size:52px;font-weight:800;letter-spacing:-2px;margin:6px 0 4px;font-variant-numeric:tabular-nums}
+.result-percent span{font-size:24px;font-weight:600;opacity:.7}
+.result-hero p{font-size:12px;color:rgba(255,255,255,.75)}
+.result-hero .verdict{display:inline-block;margin-top:12px;padding:5px 14px;border-radius:99px;font-size:11.5px;font-weight:800;letter-spacing:.3px;background:rgba(255,255,255,.13)}
+.result-hero .verdict.good{background:rgba(39,174,96,.25);color:#A9F0C5}
+.result-hero .verdict.mid{background:rgba(241,196,15,.25);color:#FCEBA6}
+.result-hero .verdict.bad{background:rgba(231,76,60,.25);color:#F8C0B8}
+
+.result-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.result-stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;box-shadow:0 6px 16px rgba(20,40,50,.04)}
+.result-stat .num{font-size:24px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.result-stat .lbl{font-size:10.5px;color:var(--muted);margin-top:4px;font-weight:600;letter-spacing:.3px}
+.result-stat.good .num{color:var(--success)}
+.result-stat.bad .num{color:var(--danger)}
+.result-stat.mute .num{color:var(--muted)}
+
+.result-actions{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.review-list{display:flex;flex-direction:column;gap:10px;padding-bottom:20px;margin-top:8px}
+.review-item{border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px;box-shadow:0 4px 14px rgba(11,53,71,.04);animation:cardIn .35s cubic-bezier(.22,.61,.36,1) both}
+.review-item.wrong{border-color:#F5C6C0;background:#FFF8F7}
+.review-item.unanswered{border-color:#F0E0A0;background:#FFFDF2}
+.review-num{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:22px;padding:0 7px;border-radius:8px;background:var(--soft);color:var(--blue);font-size:11px;font-weight:700;margin-left:8px;vertical-align:middle}
+.review-item.wrong .review-num{background:var(--danger-bg);color:var(--danger)}
+.review-item.unanswered .review-num{background:var(--warn-bg);color:var(--warn)}
+.review-q{font-size:13.5px;font-weight:700;color:var(--navy);line-height:1.7;margin-bottom:10px}
+.review-line{font-size:12.5px;line-height:1.75;padding:7px 11px;border-radius:8px;background:#F8FBFD;margin-bottom:6px;border-right:3px solid #D5E3EC;color:#2c3e50}
+.review-line.correct{background:var(--success-bg);border-right-color:var(--success-line);color:var(--success);font-weight:600}
+.review-line.wrong{background:var(--danger-bg);border-right-color:var(--danger-line);color:var(--danger);font-weight:600}
+.review-line .lbl{font-weight:800;opacity:.85;margin-left:6px}
+.review-exp{margin-top:8px;padding:11px 14px;border-radius:9px;background:#EAF6FF;border-right:4px solid var(--blue)}
+.review-exp .lbl{font-size:11.5px;font-weight:800;color:var(--navy);display:block;margin-bottom:5px}
+.review-exp .txt{font-size:12px;line-height:1.8;color:#34495e}
+
+@media(max-width:360px){
+  .page{padding-left:16px;padding-right:16px}
+  .logo-wrap{width:min(58vw,180px)}
+  .main-card{min-height:104px;padding:18px}
+  .main-icon{width:52px;height:52px}
+  .course-icon{width:48px;height:48px}
+  .q-card-text{font-size:12.5px}
+  .result-percent{font-size:44px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- WELCOME -->
+  <section id="welcome" class="page active welcome" aria-label="صفحه خوش‌آمدگویی">
+    <div class="logo-wrap" aria-label="MedEx">
+      <svg class="logo-svg" viewBox="0 0 200 260" role="img" aria-label="لوگوی MedEx">
+        <path class="e-back" d="M62 30 L62 160 L138 160 L138 140 L82 140 L82 105 L128 105 L128 85 L82 85 L82 50 L138 50 L138 30 Z"/>
+        <path class="m-outer" d="M42 30 L42 160 L62 160 L62 78 L100 145 L138 78 L138 160 L158 160 L158 30 L138 30 L100 97 L62 30 Z"/>
+        <path class="m-core" d="M100 97 L100 145"/>
+        <path class="pulse-line" d="M30 185 L70 185 L80 168 L92 202 L104 178 L114 190 L170 190"/>
+        <text x="100" y="240" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif" font-size="42" class="m-text">Med<tspan class="m-text-accent">Ex</tspan></text>
+      </svg>
+    </div>
+    <button class="start-btn" type="button" data-nav="courses" aria-label="ورود">ورود</button>
+  </section>
+
+  <!-- COURSES -->
+  <section id="courses" class="page" aria-label="درس‌های من">
+    <div class="header">
+      <button class="back" type="button" data-nav="welcome" aria-label="بازگشت">‹</button>
+      <div class="header-text"><h1>درس‌های من</h1><p>مسیر موردنظر خودت را انتخاب کن</p></div>
+    </div>
+    <div class="context"><span><span class="dot"></span><strong>MedEx</strong> برای مطالعه سریع و هدفمند</span><span>۲ درس</span></div>
+    <div class="course-list">
+      <button class="course-card" type="button" data-course="infectious" aria-label="تئوری عفونی">
+        <div class="course-info">
+          <div class="course-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="8"/><path d="M16 4v4M16 24v4M4 16h4M24 16h4M8 8l3 3M21 21l3 3M24 8l-3 3M11 21l-3 3"/></svg></div>
+          <div><div class="course-name">تئوری عفونی</div><div class="course-status">امتحان برگزار شده</div></div>
+        </div>
+        <div class="arrow" aria-hidden="true">‹</div>
+      </button>
+      <button class="course-card" type="button" data-course="surgery" aria-label="کورس جراحی">
+        <div class="course-info">
+          <div class="course-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M6 22l10-10 4 4-10 10z"/><path d="M16 12l6-6 3 3-6 6"/><path d="M21 9l2 2"/></svg></div>
+          <div><div class="course-name">کورس جراحی</div><div class="course-status">امتحان ۱۸ مهر</div></div>
+        </div>
+        <div class="arrow" aria-hidden="true">‹</div>
+      </button>
+    </div>
+    <div class="footer-note">کمتر جست‌وجو کن؛ بیشتر یاد بگیر.</div>
+  </section>
+
+  <!-- COURSE HOME -->
+  <section id="courseHome" class="page" aria-label="صفحه درس">
+    <div class="header">
+      <button class="back" type="button" data-nav="courses" aria-label="بازگشت">‹</button>
+      <div class="header-text"><h1 id="selectedCourse">کورس جراحی</h1><p id="courseDescription">آمادگی برای امتحان</p></div>
+    </div>
+    <div class="course-hero">
+      <small>YOUR STUDY SPACE</small>
+      <h2 id="heroTitle">کورس جراحی</h2>
+      <p id="heroSub">مسیر مطالعه</p>
+      <svg class="hero-line" viewBox="0 0 360 17" preserveAspectRatio="none" aria-hidden="true"><path d="M2 10h95l7-5 7 10 8-13 8 8h65l6-5 7 5h150"/></svg>
+    </div>
+    <div class="main-options">
+      <button class="main-card" type="button" data-nav="summary" aria-label="مرور سریع">
+        <div class="main-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 6h16a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"/><path d="M11 12h10M11 17h10M11 22h6"/></svg></div>
+        <div><h2>مرور سریع</h2><p>مهم‌ترین نکات، در یک مرور کوتاه</p></div>
+      </button>
+      <button class="main-card" type="button" data-nav="test" aria-label="آزمون">
+        <div class="main-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="11"/><path d="m11 16 3 3 7-8"/></svg></div>
+        <div><h2>آزمون</h2><p>دانسته‌هایت را سریع محک بزن</p></div>
+      </button>
+      <button class="main-card" type="button" data-nav="questions" aria-label="سؤالات امتحانی">
+        <div class="main-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M8 7h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><path d="M12 13h8M12 18h5"/></svg></div>
+        <div><h2>سؤالات امتحانی</h2><p>سؤالات تألیفی و منتخب</p></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- SUMMARY / MINDMAP -->
+  <section id="summary" class="page" aria-label="مرور سریع">
+    <div class="header">
+      <button class="back" type="button" data-nav="courseHome" aria-label="بازگشت">‹</button>
+      <div class="header-text"><h1>مرور سریع</h1><p id="summaryCourse">مایندمپ جامع عفونی</p></div>
+    </div>
+    <div class="qbank-meta">
+      <span><span class="dot" style="display:inline-block;margin-left:7px;vertical-align:middle;width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(25,135,141,.08)"></span><strong>۱۸ بخش</strong> — برای مشاهده، روی بخش بزن</span>
+      <span>مایندمپ</span>
+    </div>
+    <div class="mindmap" id="mindmap-root"></div>
+  </section>
+
+  <!-- TEST -->
+  <section id="test" class="page" aria-label="آزمون">
+    <div class="header">
+      <button class="back" type="button" data-nav="courseHome" aria-label="بازگشت">‹</button>
+      <div class="header-text"><h1>آزمون</h1><p id="testCourse">سنجش یادگیری</p></div>
+    </div>
+    <div id="test-container"></div>
+  </section>
+
+  <!-- QUESTIONS -->
+  <section id="questions" class="page" aria-label="سؤالات امتحانی">
+    <div class="header">
+      <button class="back" type="button" data-nav="courseHome" aria-label="بازگشت">‹</button>
+      <div class="header-text"><h1>سؤالات امتحانی</h1><p>انتخاب نوع سؤال</p></div>
+    </div>
+    <div class="question-types">
+      <button class="question-card" type="button" data-nav="created" aria-label="سؤالات تألیفی">
+        <h2>سؤالات تألیفی</h2>
+        <p>برای سنجش و تمرین بیشتر</p>
+      </button>
+      <button class="question-card" type="button" data-nav="past" aria-label="سؤالات منتخب">
+        <h2>سؤالات منتخب</h2>
+        <p>برگرفته از ادوار گذشته</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- CREATED -->
+  <section id="created" class="page" aria-label="سؤالات تألیفی">
+    <div class="header">
+      <button class="back" type="button" data-nav="questions" aria-label="بازگشت">‹</button>
+      <div class="header-text"><h1>سؤالات تألیفی</h1><p>بانک سؤالات عفونی</p></div>
+    </div>
+    <div class="qbank-meta">
+      <span><span class="dot" style="display:inline-block;margin-left:7px;vertical-align:middle;width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(25,135,141,.08)"></span><strong>۱۰۰ سؤال</strong> در ۱۰ بخش</span>
+      <span>برای دیدن پاسخ، بزن</span>
+    </div>
+    <div class="qbank" id="qbank-root"></div>
+  </section>
+
+  <!-- PAST -->
+  <section id="past" class="page" aria-label="سؤالات منتخب">
+    <div class="header">
+      <button class="back" type="button" data-nav="questions" aria-label="بازگشت">‹</button>
+      <div class="header-text"><h1>سؤالات منتخب</h1><p>برگرفته از ادوار گذشته</p></div>
+    </div>
+    <div class="empty-box">
+      <div class="empty-icon" aria-hidden="true">⌁</div>
+      سؤالات منتخب این درس اینجا قرار می‌گیرند.
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ==================== DATA: BANK ==================== */
+  var BANK = [
+    { section: "بخش ۱: گاستروانتریت و اسهال‌های عفونی", items: [
+      {n:1, level:"medium", q:"آقای ۳۲ ساله‌ای ۶ ساعت پس از شرکت در یک مهمانی و مصرف سالاد الویه، دچار تهوع، استفراغ‌های مکرر شدید و کرامپ شکمی شده است. تب ندارد و اسهال خفیف گزارش می‌کند. شایع‌ترین پاتوژن مسئول و سم مربوطه کدام است؟",
+       opts:[["الف","Staphylococcus aureus / انتروتوکسین مقاوم به حرارت"],["ب","Clostridium perfringens / انتروتوکسین حساس به حرارت"],["ج","Escherichia coli (ETEC) / توکسین LT و ST"],["د","Salmonella enteritidis / تهاجم بافتی مستقیم"]],
+       correct:0,
+       exp:"دوره کمون بسیار کوتاه (۱ تا ۶ ساعت) همراه با غلبه تهوع و استفراغ پس از مصرف غذاهای حاوی مایونز یا خامه، مشخصه مسمومیت غذایی استافیلوکوکی ناشی از انتروتوکسین پیش‌ساخته مقاوم به حرارت است. کمون زیر ۶ ساعت + استفراغ غالب = مسمومیت غذایی استافیلوکوکی یا باسیلوس سرئوس."},
+      {n:2, level:"hard", q:"کودک ۵ ساله‌ای با اسهال خونی، تب و کرامپ شکمی مراجعه کرده است. ۲ روز بعد دچار اولیگوری، پتشی و زردی خفیف می‌شود. در آزمایشات: هموگلوبین ۸ g/dL، پلاکت ۳۵,۰۰۰ و کراتینین ۲.۸ mg/dL. مصرف کدام دارو در این بیمار اکیداً ممنوع بوده و خطر سندرم اورمیک همولیتیک (HUS) را افزایش می‌دهد؟",
+       opts:[["الف","مایع درمانی وریدی"],["ب","آنتی‌بیوتیک‌ها (مانند سیپروفلوکساسین یا کوتریموکسازول)"],["ج","مکمل روی خوراکی"],["د","تزریق پلاسما"]],
+       correct:1,
+       exp:"در اسهال خونی ناشی از EHEC (مانند سویه O157:H7)، تجویز آنتی‌بیوتیک باعث تحریک آزادسازی بیشتر شیگاتوکسین شده و خطر ابتلا به سندرم اورمیک همولیتیک (HUS) را به شدت افزایش می‌دهد. در اسهال خونی مشکوک به EHEC، تجویز آنتی‌بیوتیک و داروهای ضد موتیلیتی (لوپرامید) ممنوع است."},
+      {n:3, level:"easy", q:"پزشک ۴۰ ساله‌ای پس از بازگشت از سفر به یک منطقه روستایی دچار اسهال آبکی حجیم بدون خون و تب شده است. شایع‌ترین عامل «اسهال مسافرتی» و رژیم درمانی انتخابی در صورت شدت علائم کدام است؟",
+       opts:[["الف","Shigella dysenteriae / آمپی‌سیلین"],["ب","ETEC (Enterotoxigenic E. coli) / آزیترومایسین یا فلوروکینولون"],["ج","Vibrio cholerae / داکسی‌سیکلین"],["د","Giardia lamblia / مترونیدازول"]],
+       correct:1,
+       exp:"ETEC شایع‌ترین عامل اسهال مسافرتی است. درمان در موارد شدید: آزیترومایسین یا فلوروکینولون (سیپروفلوکساسین)."},
+      {n:4, level:"medium", q:"کدام یافته بالینی در اسهال‌های التهابی، نشان‌دهنده درگیری کولون است؟",
+       opts:[["الف","حجم زیاد مدفوع"],["ب","تعداد دفعات کم"],["ج","تنسموس و Urgency"],["د","بدون خون"]],
+       correct:2,
+       exp:"تیپ کولیک (کولون یا رکتوم) با حجم کم، تعداد دفعات زیاد، Urgency، تنسموس و عمدتاً التهابی مشخص می‌شود."},
+      {n:5, level:"medium", q:"کدام یک از خطوط دفاعی روده محسوب نمی‌شود؟",
+       opts:[["الف","فلور طبیعی"],["ب","اسید معده"],["ج","افزایش pH معده"],["د","IgA ترشحی"]],
+       correct:2,
+       exp:"افزایش pH معده (کاهش اسید) یک عامل خطر برای اسهال عفونی است، نه یک خط دفاعی."},
+      {n:6, level:"hard", q:"کدام ارگانیسم با دوره کمون ۸ تا ۱۶ ساعت و علائم غالب کرامب شکمی و اسهال مشخص می‌شود؟",
+       opts:[["الف","استاف اورئوس"],["ب","کلستریدیوم پرفرینژنس"],["ج","ویبریوکلرا"],["د","EHEC"]],
+       correct:1,
+       exp:"کلستریدیوم پرفرینژنس: دوره کمون ۸-۱۶ ساعت، کرامب شکمی و اسهال غالب."},
+      {n:7, level:"medium", q:"عارضه کمپیلوباکتر ژوژنی کدام است؟",
+       opts:[["الف","سندروم گیلن‌باره"],["ب","HUS"],["ج","آرتریت واکنشی"],["د","IBS"]],
+       correct:0,
+       exp:"سندروم گیلن‌باره عارضه پس از عفونت با کمپیلوباکتر ژوژنی است."},
+      {n:8, level:"medium", q:"عارضه EHEC و شیگال دیسانتری تیپ ۱ کدام است؟",
+       opts:[["الف","سندروم گیلن‌باره"],["ب","HUS (آنمی همولیتیک، ترومبوسیتوپنی، نارسایی کلیه)"],["ج","آرتریت واکنشی"],["د","IBS"]],
+       correct:1,
+       exp:"HUS عارضه EHEC و شیگال دیسانتری تیپ ۱ است که از طریق شیگاتوکسین ایجاد می‌شود."},
+      {n:9, level:"medium", q:"داروی انتخابی آنتی‌بیوتیک تجربی در اسهال شدید کدام است؟",
+       opts:[["الف","فلوروکینولون، به همراه یا بدون مترونیدازول"],["ب","آزیترومایسین"],["ج","پنی‌سیلین"],["د","سفتریاکسون"]],
+       correct:0,
+       exp:"داروی انتخابی فلوروکینولون، به همراه یا بدون مترونیدازول است. در بارداری یا کودکان: ماکرولید (آزیترومایسین) یا بتالاکتام (سفیکسیم)."},
+      {n:10, level:"easy", q:"کشت مدفوع پس از چند روز جواب می‌دهد؟",
+       opts:[["الف","۱ روز"],["ب","۲ روز"],["ج","۳ روز"],["د","۱ هفته"]],
+       correct:1,
+       exp:"کشت مدفوع پس از ۲ روز جواب می‌دهد و برای تشخیص سالمونلا، شیگلا، E.coli و کمپیلوباکتر کاربرد دارد."}
+    ]},
+    { section: "بخش ۲: پنومونی اکتسابی از جامعه و بیمارستانی", items: [
+      {n:11, level:"medium", q:"در ارزیابی شدت پنومونی اکتسابی از جامعه (CAP) بر اساس معیار CURB-65، کدام یک از موارد زیر جزو ۵ امتیاز محاسبه نمی‌شود؟",
+       opts:[["الف","اختلال هوشیاری (Confusion)"],["ب","اوره خون (BUN) بالای ۱۹ mg/dL"],["ج","تعداد تنفس (RR) بالای ۳۰ در دقیقه"],["د","میزان ESR بالای ۵۰ mm/hr"]],
+       correct:3,
+       exp:"اجزای CURB-65: Confusion، Urea > 19 mg/dL، RR ≥ 30، BP < 90/60 و Age ≥ 65. ESR جزو آن نیست."},
+      {n:12, level:"hard", q:"مرد ۶۵ ساله سیگاری با تب، سرفه خشک، اسهال آبکی، گیجی و هیپوناترمی (Na=124 mEq/L) مراجعه کرده است. در گرافی ریه ارتشاح برونکوواسکولار دیده می‌شود. آنتی‌ژن ادراری کدام پاتوژن باید بررسی شود و درمان انتخابی چیست؟",
+       opts:[["الف","Streptococcus pneumoniae / پنی‌سیلین G"],["ب","Legionella pneumophila / آزیترومایسین یا لووفلوکساسین"],["ج","Mycoplasma pneumoniae / کوآموکسی‌کلاو"],["د","Klebsiella pneumoniae / سفتریاکسون"]],
+       correct:1,
+       exp:"علائم خارج ریوی (اسهال، علائم عصبی) همراه با هیپوناترمی و سرفه خشک در فرد سیگاری، نمای کلاسیک پنومونی لژیونلا است. تشخیص با آنتی‌ژن ادراری و درمان با ماکرولید یا فلوروکینولون."},
+      {n:13, level:"medium", q:"برای بیمار مبتلا به CAP شدید که در ICU بستری می‌شود و ریسک فاکتور برای سودوموناس ندارد، رژیم آنتی‌بیوتیکی استاندارد تجربی کدام است؟",
+       opts:[["الف","سفتریاکسون + آزیترومایسین (یا یک فلوروکینولون تنفسی به تنهایی)"],["ب","آمپی‌سیلین به تنهایی"],["ج","وانکومایسین به تنهایی"],["د","سیپروفلوکساسین + جنتامایسین"]],
+       correct:0,
+       exp:"در CAP بستری در ICU، رژیم استاندارد: بتالاکتام قوی (سفتریاکسون یا آمپی‌سیلین-سولباکتام) + ماکرولید (آزیترومایسین) یا مونوتراپی با فلوروکینولون تنفسی."},
+      {n:14, level:"easy", q:"جوان ۱۸ ساله‌ای با تب خفیف، گلودرد، میالژی و سرفه خشک آزاردهنده مراجعه کرده است. در گرافی ریه نمای ارتشاح اینترستیشیال دوطرفه دیده می‌شود که شدت آن بسیار بیشتر از تابلوی بالینی بیمار است (Walking pneumonia). پاتوژن مسئول چیست؟",
+       opts:[["الف","Streptococcus pneumoniae"],["ب","Mycoplasma pneumoniae"],["ج","Staphylococcus aureus"],["د","Klebsiella pneumoniae"]],
+       correct:1,
+       exp:"مایکوپلاسما پنومونیه شایع‌ترین علت CAP آتیپیک در جوانان و سربازان است. عدم تناسب گرافی شدید با تابلوی بالینی ملایم مشخصه آن است."},
+      {n:15, level:"medium", q:"بیمار مبتلا به الکلیسم مزمن با تب بالا، لرز شدید و خلط ژله‌ای قرمز رنگ (Currant jelly) مراجعه کرده است. در گرافی ریه کاویته در لوب فوقانی دیده می‌شود. پاتوژن احتمالی کدام است؟",
+       opts:[["الف","Klebsiella pneumoniae"],["ب","Mycoplasma pneumoniae"],["ج","Pseudomonas aeruginosa"],["د","Pneumocystis jirovecii"]],
+       correct:0,
+       exp:"کلبسیلا پنومونیه باکتری گرم منفی است که در افراد الکلی یا دیابتی باعث پنومونی شدید با خلط ژله‌ای بلوطی/قرمز و کاویته می‌شود."},
+      {n:16, level:"hard", q:"در پنومونی بیمارستانی (HAP/VAP) با ریسک فاکتور برای MRSA و Pseudomonas aeruginosa، کدام ترکیب دارویی تجربی مناسب است؟",
+       opts:[["الف","وانکومایسین + سفپیم (یا پیپراسیلین/تازوباکتام)"],["ب","کوآموکسی‌کلاو + آزیترومایسین"],["ج","سفتریاکسون به تنهایی"],["د","آمپی‌سیلین + آمیکاسین"]],
+       correct:0,
+       exp:"در HAP/VAP با خطر MRSA و سودوموناس، پوشش هم‌زمان دو آنتی‌سودومونا (سفپیم یا پیپراسیلین/تازوباکتام) به‌همراه یک داروی ضد MRSA (وانکومایسین یا لینزولید) الزامی است."},
+      {n:17, level:"medium", q:"کدام الگوی پاتولوژیک مربوط به CAP باکتریال است؟",
+       opts:[["الف","آلوئولار"],["ب","لوبار"],["ج","برونکوپنومونی"],["د","برونشیت"]],
+       correct:1,
+       exp:"CAP باکتریال با الگوی لوبار مشخص می‌شود. CAP ویرال یا نوموسیستیس با آلوئولار، HAP با برونکوپنومونی و VAP با برونشیت."},
+      {n:18, level:"hard", q:"کدام گزینه در مورد HAP صحیح است؟",
+       opts:[["الف","مورتالیتی بالاتر از VAP دارد"],["ب","تشخیص آن سخت‌تر است ولی مورتالیتی کمتری دارد"],["ج","پاتوژن غالب آن پنوموکوک است"],["د","نیازی به کشت ندارد"]],
+       correct:1,
+       exp:"HAP مورتالیتی کمتری دارد ولی تشخیص آن سخت‌تر است. این دو ویژگی هرگز نباید جابه‌جا شوند."},
+      {n:19, level:"medium", q:"کدام آنتی‌بیوتیک در پنومونی آسپیراسیون ارجح است؟",
+       opts:[["الف","سفتریاکسون"],["ب","کلیندامایسین"],["ج","آزیترومایسین"],["د","سیپروفلوکساسین"]],
+       correct:1,
+       exp:"کلیندامایسین در پنومونی آسپیراسیون و آبسه ریه ارجح است."},
+      {n:20, level:"hard", q:"معیارهای CAP شدید (Major) کدام است؟",
+       opts:[["الف","نارسایی تنفسی نیازمند ونتیلاسیون تهاجمی، شوک سپتیک نیازمند وازوپرسور"],["ب","تعداد تنفس ≥ ۳۰"],["ج","نسبت PaO2/FiO2 ≤ ۲۵۰"],["د","لکوسیتوز"]],
+       correct:0,
+       exp:"معیارهای Major در CAP شدید: نارسایی تنفسی نیازمند ونتیلاسیون تهاجمی و شوک سپتیک نیازمند وازوپرسور."}
+    ]},
+    { section: "بخش ۳: هپاتیت‌های ویروسی", items: [
+      {n:21, level:"easy", q:"در تفسیر سرولوژی هپاتیت B: HBsAg منفی، Anti-HBs مثبت، Anti-HBc IgG منفی. وضعیت بیمار چیست؟",
+       opts:[["الف","ایمنی ناشی از واکسیناسیون هپاتیت B"],["ب","بهبودی از عفونت طبیعی قبلی"],["ج","هپاتیت B حاد در دوره پنجره"],["د","هپاتیت B مزمن ناقل غیرفعال"]],
+       correct:0,
+       exp:"در فردی که فقط واکسن هپاتیت B دریافت کرده، Anti-HBs مثبت می‌شود و Anti-HBc منفی باقی می‌ماند."},
+      {n:22, level:"medium", q:"خانم بارداری در ۳ ماهه سوم بارداری دچار نارسایی حاد کبد، کوآگولوپاتی و یرقان شدید شده است. کدام ویروس هپاتیت دارای بالاترین میزان مرگ‌ومیر (تا ۲۰٪) در زنان باردار است؟",
+       opts:[["الف","HAV"],["ب","HCV"],["ج","HEV"],["د","HBV"]],
+       correct:2,
+       exp:"HEV در زنان باردار (به‌ویژه ۳ ماهه سوم) می‌تواند باعث نارسایی حاد کبد و مرگ‌ومیر تا ۲۰٪ شود."},
+      {n:23, level:"medium", q:"نوزادی از مادر مبتلا به هپاتیت B حاد (HBsAg مثبت و HBeAg مثبت) متولد شده است. بهترین اقدام برای پیشگیری از انتقال عمودی به نوزاد طی ۱۲ ساعت اول تولد چیست؟",
+       opts:[["الف","تزریق واکسن هپاتیت B به تنهایی"],["ب","تزریق هم‌زمان واکسن هپاتیت B و ایمونوگلوبولین (HBIG) در دو موضع متفاوت"],["ج","تجویز تنوفوویر خوراکی به نوزاد"],["د","نیازی به اقدام نیست"]],
+       correct:1,
+       exp:"تزریق هم‌زمان اولین دوز واکسن HBV و HBIG طی ۱۲ ساعت اول پس از تولد در دو سمت مجزا الزامی است."},
+      {n:24, level:"easy", q:"کدام مارکر سرولوژیک هپاتیت B نشان‌دهنده تکثیر فعال ویروس، واگیری بسیار بالا و ریسک بالای انتقال بیماری است؟",
+       opts:[["الف","HBeAg"],["ب","Anti-HBe"],["ج","Anti-HBs"],["د","Anti-HBc IgG"]],
+       correct:0,
+       exp:"HBeAg نشان‌دهنده تکثیر فعال ویروس و عفونت‌زایی شدید است."},
+      {n:25, level:"easy", q:"عفونت با ویروس هپاتیت D (HDV) تنها در حضور کدام ویروس دیگر امکان‌پذیر است؟",
+       opts:[["الف","HAV"],["ب","HBV"],["ج","HCV"],["د","HEV"]],
+       correct:1,
+       exp:"HDV یک ویروس ناقص (Defective) است که برای غلاف‌دار شدن به HBsAg نیاز دارد."},
+      {n:26, level:"hard", q:"در بیمار مبتلا به هپاتیت C مزمن، SVR به چه معناست؟",
+       opts:[["الف","منفی شدن HCV RNA ۱۲ هفته پس از اتمام دوره درمان"],["ب","مثبت ماندن Anti-HCV بعد از ۶ ماه"],["ج","طبیعی شدن آنزیم‌های کبدی طی ۲ هفته اول"],["د","افت ۵۰ درصدی آنتی‌بادی‌ها"]],
+       correct:0,
+       exp:"SVR12 یعنی عدم شناسایی HCV RNA ۱۲ هفته پس از پایان درمان = درمان قطعی."},
+      {n:27, level:"medium", q:"کدام ویروس هپاتیت DNA دارد؟",
+       opts:[["الف","HAV"],["ب","HBV"],["ج","HCV"],["د","HEV"]],
+       correct:1,
+       exp:"فقط HBV دارای DNA است؛ بقیه RNA هستند."},
+      {n:28, level:"hard", q:"تنها مارکر مثبت در Window Period هپاتیت B کدام است؟",
+       opts:[["الف","HBsAg"],["ب","Anti-HBs"],["ج","IgM Anti-HBc"],["د","HBeAg"]],
+       correct:2,
+       exp:"در Window Period، تنها مارکر مثبت IgM Anti-HBc است."},
+      {n:29, level:"medium", q:"کدام گزینه در مورد درمان هپاتیت B حاد شدید صحیح است؟",
+       opts:[["الف","ریباویرین"],["ب","تنوفوویر یا انتکاویر"],["ج","اینترفرون"],["د","کورتون"]],
+       correct:1,
+       exp:"در هپاتیت B حاد شدید، تنوفوویر یا انتکاویر ارجح است."},
+      {n:30, level:"hard", q:"کدام گزینه در مورد مواجهه شغلی با HBV در فرد واکسن‌نزده صحیح است؟",
+       opts:[["الف","واکسن به‌همراه ایمونوگلوبولین فوری، سپس تکمیل واکسیناسیون"],["ب","فقط واکسن"],["ج","فقط ایمونوگلوبولین"],["د","هیچ اقدامی لازم نیست"]],
+       correct:0,
+       exp:"در فرد واکسن‌نزده، واکسن به‌همراه ایمونوگلوبولین فوری تزریق می‌شود."}
+    ]},
+    { section: "بخش ۴: عفونت‌های ادراری و استئومیلیت", items: [
+      {n:31, level:"easy", q:"خانم ۱۹ ساله مجرد با سوزش ادرار، تکرر و فوریت ادراری از روز گذشته مراجعه کرده است. تب، تهوع یا درد پهلو ندارد. در آنالیز ادرار WBC فراوان و نیتریت مثبت است. کدام گزینه درمان خط اول سیستیت ساده (Uncomplicated) در این بیمار است؟",
+       opts:[["الف","نیتروفورانتوئین ۱۰۰ mg روزی ۲ بار به مدت ۵ روز (یا کوتریموکسازول)"],["ب","سیپروفلوکساسین ۵۰۰ mg هر ۱۲ ساعت به مدت ۱۴ روز"],["ج","سفپیم وریدی به مدت ۱۰ روز"],["د","جنتامایسین تزریقی تک‌دوز"]],
+       correct:0,
+       exp:"در سیستیت حاد ساده، خط اول درمان نیتروفورانتوئین (۵ روز)، فسفومایسین تک‌دوز یا کوتریموکسازول (۳ روز) است."},
+      {n:32, level:"medium", q:"کدام یک از شرایط زیر جزو اندیکاسیون‌های قطعی غربالگری و درمان باکتریوری بدون علامت (ASB) محسوب می‌شود؟",
+       opts:[["الف","خانم‌های باردار و افراد کاندید اقدامات تهاجمی اورولوژی"],["ب","سالمندان ساکن خانه سالمندان"],["ج","بیماران دارای سوند ادراری فولی دائم بدون علامت"],["د","بیماران مبتلا به دیابت کنترل‌شده"]],
+       correct:0,
+       exp:"درمان ASB فقط در دو گروه: ۱) زنان باردار، ۲) قبل از پروسه تهاجمی اورولوژی."},
+      {n:33, level:"medium", q:"خانم ۳۰ ساله‌ای با تب بالا، لرز، تهوع و درد شدید زاویه کوستوورتبرال (CVA tenderness) مراجعه کرده است. در U/A لکوسیتوز و کست گلبول سفید (WBC cast) مشهود است. تشخیص و مدت زمان استاندارد درمان آنتی‌بیوتیکی کدام است؟",
+       opts:[["الف","پیلونفریت حاد / ۷ تا ۱۴ روز (با سیپروفلوکساسین یا سفتریاکسون)"],["ب","سیستیت ساده / ۳ روز"],["ج","باکتریوری بدون علامت / تک‌دوز"],["د","سندروم اورترال / ۳ روز"]],
+       correct:0,
+       exp:"CVA tenderness و WBC cast در ادرار تشخیصی پیلونفریت حاد است. درمان: ۷-۱۴ روز."},
+      {n:34, level:"easy", q:"شایع‌ترین پاتوژن عامل استئومیلیت حاد در تمامی گروه‌های سنی کدام است؟",
+       opts:[["الف","Staphylococcus aureus"],["ب","Pseudomonas aeruginosa"],["ج","Escherichia coli"],["د","Salmonella enteritidis"]],
+       correct:0,
+       exp:"استافیلوکوک اورئوس شایع‌ترین باکتری عامل استئومیلیت و آرتریت سپتیک در تمام سنین است."},
+      {n:35, level:"medium", q:"در بیمار مبتلا به آنمی داسی‌شکل که دچار استئومیلیت شده است، علاوه بر استاف اورئوس، کدام باکتری جزو عوامل شایع و اختصاصی مطرح است؟",
+       opts:[["الف","Salmonella species"],["ب","Listeria monocytogenes"],["ج","Brucella abortus"],["د","Streptococcus pneumoniae"]],
+       correct:0,
+       exp:"در آنمی داسی‌شکل، سالمونلا پاتوژن بسیار شایع و اختصاصی برای استئومیلیت است."},
+      {n:36, level:"easy", q:"دقیق‌ترین و حساس‌ترین روش تصویربرداری برای تشخیص زودرس استئومیلیت در روزهای اول بیماری کدام است؟",
+       opts:[["الف","MRI با تزریق گادولینیوم"],["ب","گرافی ساده استخوان"],["ج","سونوگرافی بافت نرم"],["د","سی‌تی اسکن بدون حاجب"]],
+       correct:0,
+       exp:"MRI حساس‌ترین و دقیق‌ترین روش برای تشخیص زودرس استئومیلیت است."},
+      {n:37, level:"medium", q:"تریاد تشخیصی سندرم اورترال حاد کدام است؟",
+       opts:[["الف","دیزوری + فریکوئنسی + ارجنسی"],["ب","تب + لرز + دیزوری"],["ج","هماچوری + دیزوری + درد پهلو"],["د","فریکوئنسی + ارجنسی + تب"]],
+       correct:0,
+       exp:"تریاد تشخیصی: دیزوری + فریکوئنسی + ارجنسی."},
+      {n:38, level:"hard", q:"معیار کشت مثبت در خانم علامت‌دار چقدر است؟",
+       opts:[["الف","۱۰⁵"],["ب","۱۰³"],["ج","۱۰²"],["د","۱۰⁴"]],
+       correct:1,
+       exp:"خانم علامت‌دار: ۱۰³، مرد علامت‌دار: ۱۰³، کاتتر: ۱۰²، بدون علامت: ۱۰⁵."},
+      {n:39, level:"medium", q:"کدام آنتی‌بیوتیک در UTI مناسب نیست؟",
+       opts:[["الف","سفیکسیم"],["ب","سیپروفلوکساسین"],["ج","آزیترومایسین"],["د","کوتریموکسازول"]],
+       correct:2,
+       exp:"آزیترومایسین در UTI مناسب نیست چون غلظت ادراری مناسب ندارد."},
+      {n:40, level:"hard", q:"وجه افتراق اصلی استئومیلیت و آرتریت سپتیک کدام است؟",
+       opts:[["الف","تب"],["ب","ROM (دامنه حرکتی مفصل)"],["ج","تندرنس"],["د","قرمزی"]],
+       correct:1,
+       exp:"ROM: نرمال در استئومیلیت، کاهش‌یافته در آرتریت سپتیک."}
+    ]},
+    { section: "بخش ۵: سل (Tuberculosis)", items: [
+      {n:41, level:"easy", q:"رژیم دارویی استاندارد خط اول برای درمان سل ریوی اولیه حساس به دارو شامل کدام داروها در فاز فشرده (۲ ماه اول) است؟",
+       opts:[["الف","ایزونیازید + ریفامپین + پیرازین‌آمید + اتامبوتول (HRZE)"],["ب","ایزونیازید + ریفامپین به مدت ۶ ماه"],["ج","سیپروفلوکساسین + آمیکاسین + ایزونیازید"],["د","ریفامپین + اتامبوتول + استرپتومایسین"]],
+       correct:0,
+       exp:"درمان استاندارد: ۲ ماه HRZE + ۴ ماه HR."},
+      {n:42, level:"medium", q:"کدام یک از عوارض جانبی زیر مربوط به داروی «اتامبوتول» بوده و نیازمند پایش منظم معاینات چشمی است؟",
+       opts:[["الف","نوریت رتروبولبار بینایی و کاهش دید رنگی (سبز-قرمز)"],["ب","هیپراوریسمی و نقرس حاد"],["ج","نارنجی شدن ترشحات بدن"],["د","نوروپاتی محیطی"]],
+       correct:0,
+       exp:"اتامبوتول باعث نوریت بینایی و اختلال در دید رنگی می‌شود."},
+      {n:43, level:"easy", q:"برای پیشگیری از عارضه «نوروپاتی محیطی» ناشی از مصرف ایزونیازید (INH) در افراد پرخطر، کدام مکمل تجویز می‌شود؟",
+       opts:[["الف","پیریدوکسین (ویتامین B6)"],["ب","کوبالامین (ویتامین B12)"],["ج","اسید فولیک"],["د","ویتامین C"]],
+       correct:0,
+       exp:"ایزونیازید آنتاگونیست ویتامین B6 است و تجویز همزمان B6 از نوروپاتی جلوگیری می‌کند."},
+      {n:44, level:"medium", q:"تعریف «سل مقاوم به چند دارو» (MDR-TB) کدام است؟",
+       opts:[["الف","مقاومت هم‌زمان به ایزونیازید (INH) و ریفامپین (RIF)"],["ب","مقاومت به پیرازین‌آمید و اتامبوتول"],["ج","مقاومت به ایزونیازید و استرپتومایسین"],["د","مقاومت به ریفامپین و فلوروکینولون"]],
+       correct:0,
+       exp:"MDR-TB: مقاومت هم‌زمان به INH و RIF."},
+      {n:45, level:"easy", q:"عارضه جانبی شایع و مشخصه داروی «ریفامپین» که باید قبل از شروع درمان به بیمار اطلاع‌رسانی شود، کدام است؟",
+       opts:[["الف","نارنجی/قرمز شدن ادرار، اشک و ترشحات بدن"],["ب","درد شدید مفاصل"],["ج","کاهش شنوایی و وزوز گوش"],["د","اختلال در دید رنگی"]],
+       correct:0,
+       exp:"ریفامپین ترشحات بدن را قرمز/نارنجی می‌کند که بی‌خطر است."},
+      {n:46, level:"medium", q:"آزمایش سریع مولکولی GeneXpert MTB/RIF چه مزیت کلیدی در تشخیص سل دارد؟",
+       opts:[["الف","تشخیص همزمان DNA سل و مقاومت به ریفامپین ظرف کمتر از ۲ ساعت"],["ب","سنجش ایمنی سلولی"],["ج","افتراق سل فعال از نهفته"],["د","تعیین دوز داروهای خط دوم"]],
+       correct:0,
+       exp:"GeneXpert یک تست PCR سریع (۲ ساعت) برای تشخیص سل + مقاومت ریفامپین است."},
+      {n:47, level:"medium", q:"انتقال سل از چه راهی است؟",
+       opts:[["الف","مدفوعی-دهانی"],["ب","هوابرد (Airborne) با قطرات ۵ تا ۱۰ میکرون"],["ج","تماس پوستی"],["د","جنسی"]],
+       correct:1,
+       exp:"انتقال سل فقط از راه هوابرد است."},
+      {n:48, level:"hard", q:"در بیمار مشکوک به سل، کدام آنتی‌بیوتیک ممنوع است؟",
+       opts:[["الف","سفتریاکسون"],["ب","فلوروکینولون"],["ج","آزیترومایسین"],["د","آمپی‌سیلین"]],
+       correct:1,
+       exp:"فلوروکینولون در مشکوک به سل باعث تأخیر تشخیص و مقاومت می‌شود."},
+      {n:49, level:"medium", q:"آستانه TST در بیمار HIV مثبت چقدر است؟",
+       opts:[["الف","۵ میلی‌متر"],["ب","۱۰ میلی‌متر"],["ج","۱۵ میلی‌متر"],["د","۲۰ میلی‌متر"]],
+       correct:0,
+       exp:"آستانه TST در HIV مثبت: > ۵mm."},
+      {n:50, level:"hard", q:"کدام گزینه در مورد سل ثانویه صحیح است؟",
+       opts:[["الف","در بزرگسالان، نقص ایمنی، قله‌های ریه"],["ب","در کودکان، بی‌علامت، نواحی میانی"],["ج","همیشه بی‌علامت"],["د","فقط در HIV"]],
+       correct:0,
+       exp:"سل ثانویه (ری‌اکتیویشن) در بزرگسالان، نقص ایمنی، قله‌های ریه رخ می‌دهد."}
+    ]},
+    { section: "بخش ۶: عفونت‌های سیستم اعصاب مرکزی (CNS)", items: [
+      {n:51, level:"hard", q:"آقای ۵۵ ساله دیابتی با تب، سردرد شدید، گیجی و سفتی گردن مراجعه کرده است. در CSF: فشار ۲۸۰ mmH2O، WBC ۱۲۰۰ (۸۵٪ نوتروفیل)، قند ۲۰، پروتئین ۲۲۰. کدام رژیم تجربی مناسب است؟",
+       opts:[["الف","سفتریاکسون + وانکومایسین + آمپی‌سیلین (+ دگزامتازون)"],["ب","سفتریاکسون + وانکومایسین"],["ج","آسیکلوویر وریدی به تنهایی"],["د","پنی‌سیلین G"]],
+       correct:0,
+       exp:"در مننژیت باکتریال حاد در بالای ۵۰ سال یا دیابت، پوشش لیستریا با آمپی‌سیلین الزامی است."},
+      {n:52, level:"medium", q:"کدام یافته در CSF نفع «مننژیت سلولی یا قارچی» است؟",
+       opts:[["الف","لنفوسیتوز، افت شدید قند، افزایش شدید پروتئین"],["ب","نوتروفیلی و قند طبیعی"],["ج","WBC زیر ۱۰ با قند و پروتئین طبیعی"],["د","گلبول قرمز فراوان"]],
+       correct:0,
+       exp:"مننژیت سلولی/قارچی: لنفوسیتوز + قند پایین + پروتئین بسیار بالا."},
+      {n:53, level:"medium", q:"زمان بندی صحیح تجویز دگزامتازون در مننژیت باکتریال حاد ناشی از پنوموکوک کدام است؟",
+       opts:[["الف","۱۵ تا ۲۰ دقیقه قبل یا همزمان با اولین دوز آنتی‌بیوتیک"],["ب","۲۴ ساعت پس از اتمام آنتی‌بیوتیک"],["ج","بعد از ۴۸ ساعت"],["د","کنترااندیکه است"]],
+       correct:0,
+       exp:"دگزامتازون قبل یا همزمان با اولین دوز آنتی‌بیوتیک تجویز می‌شود."},
+      {n:54, level:"medium", q:"جوان ۲۲ ساله‌ای با تشنج فوکال، اختلال شخصیت و رفتار، تب و آفازی مراجعه کرده است. در MRI ضایعات نکروتیک در لوب گیجگاهی دیده می‌شود. داروی انتخابی اورژانسی کدام است؟",
+       opts:[["الف","آسیکلوویر (Acyclovir) وریدی"],["ب","گانسیکلوویر وریدی"],["ج","وانکومایسین + سفتریاکسون"],["د","آمفوتریسین B"]],
+       correct:0,
+       exp:"انسفالیت HSV-1 با درگیری لوب تمپورال، درمان فوری آسیکلوویر وریدی."},
+      {n:55, level:"easy", q:"کدام یک از موارد زیر جزو کنترااندیکاسیون‌های انجام LP تا زمان انجام CT اسکن مغز محسوب می‌شود؟",
+       opts:[["الف","ادم پاپی، علائم عصبی فوکال، تشنج جدید"],["ب","تب بالای ۳۹ درجه"],["ج","پتشی و راش پوستی"],["د","افزایش لکوسیت‌های خون"]],
+       correct:0,
+       exp:"قبل از LP، در صورت وجود علامت فوکال، ادم پاپی یا تشنج جدید، ابتدا CT انجام می‌شود."},
+      {n:56, level:"medium", q:"پروفیلاکسی دارویی برای مواجهه‌یافتگان نزدیک با بیمار مبتلا به مننژیت مننگوکوکی کدام است؟",
+       opts:[["الف","ریفامپین (یا سیپروفلوکساسین / سفتریاکسون تک‌دوز)"],["ب","پنی‌سیلین G خوراکی ۱۰ روز"],["ج","آزیترومایسین ۲ هفته"],["د","نیازی نیست"]],
+       correct:0,
+       exp:"پروفیلاکسی: ریفامپین ۶۰۰mg هر ۱۲ ساعت × ۲ روز یا سیپرو ۵۰۰mg تک‌دوز یا سفتریاکسون تک‌دوز."},
+      {n:57, level:"easy", q:"تریاد کلاسیک مننژیت کدام است؟",
+       opts:[["الف","تب + سردرد + سفتی گردن"],["ب","تب + تشنج + کاهش هوشیاری"],["ج","سردرد + تهوع + استفراغ"],["د","تب + راش + سفتی گردن"]],
+       correct:0,
+       exp:"تریاد کلاسیک: تب + سردرد + سفتی گردن."},
+      {n:58, level:"hard", q:"کدام یافته در CSF نشان‌دهنده مننژیت باکتریال است؟",
+       opts:[["الف","لنفوسیتوز غالب"],["ب","قند نرمال"],["ج","PMN غالب، قند پایین، پروتئین بالا"],["د","لاکتات نرمال"]],
+       correct:2,
+       exp:"مننژیت باکتریال: PMN غالب، قند پایین (< ۰.۴)، پروتئین بالا."},
+      {n:59, level:"hard", q:"کدام آنتی‌بیوتیک در مننژیت لیستریا باید اضافه شود؟",
+       opts:[["الف","آمپی‌سیلین"],["ب","وانکومایسین"],["ج","سفتریاکسون"],["د","جنتامایسین"]],
+       correct:0,
+       exp:"در مننژیت لیستریا، آمپی‌سیلین به رژیم اضافه می‌شود."},
+      {n:60, level:"medium", q:"شایع‌ترین علت انسفالیت ویروسی در فرد سالم کدام است؟",
+       opts:[["الف","CMV"],["ب","HSV1"],["ج","VZV"],["د","EBV"]],
+       correct:1,
+       exp:"HSV1 شایع‌ترین عامل انسفالیت در افراد سالم است."}
+    ]},
+    { section: "بخش ۷: عفونت‌های مقاربتی (STIs)", items: [
+      {n:61, level:"medium", q:"مرد ۲۵ ساله‌ای با ترشح چرکی زرد از مجرا و دیزوری شدید مراجعه کرده است. در رنگ‌آمیزی گرم ترشحات، دیپلوکوک‌های گرم منفی داخل سلولی دیده می‌شود. درمان تجربی استاندارد چیست؟",
+       opts:[["الف","سفتریاکسون تزریقی + آزیترومایسین (یا داکسی‌سیکلین)"],["ب","پنی‌سیلین بنزاتین تک‌دوز"],["ج","مترونیدازول خوراکی"],["د","سیپروفلوکساسین به تنهایی"]],
+       correct:0,
+       exp:"دیپلوکوک گرم منفی داخل سلولی = گنوره. درمان هم‌زمان گنوره + کلامیدیا."},
+      {n:62, level:"medium", q:"زخم‌های بسیار دردناک با قاعده چرکی و حاشیه نامنظم (Punch-out) همراه با لنفادنوپاتی یک‌طرفه خیارکی. عامل و درمان کدام است؟",
+       opts:[["الف","Haemophilus ducreyi / آزیترومایسین ۱g تک‌دوز یا سفتریاکسون"],["ب","Treponema pallidum / پنی‌سیلین بنزاتین"],["ج","Chlamydia trachomatis / داکسی‌سیکلین"],["د","HSV-2 / آسیکلوویر"]],
+       correct:0,
+       exp:"شانکروئید (هموفیلوس دوکرتی): آزیترومایسین ۱g تک‌دوز یا سفتریاکسون."},
+      {n:63, level:"easy", q:"خانم بارداری در هفته ۳۴ با سابقه هرپس تناسلی و ضایعات فعال حین زایمان. مناسب‌ترین اقدام کدام است؟",
+       opts:[["الف","سزارین"],["ب","زایمان طبیعی با شستشوی بتادین"],["ج","آسیکلوویر خوراکی و زایمان طبیعی"],["د","ایمونوگلوبولین و زایمان طبیعی"]],
+       correct:0,
+       exp:"ضایعه فعال هرپسی حین زایمان = اندیکاسیون قطعی سزارین."},
+      {n:64, level:"easy", q:"کاندیلوما آکومیناتا (زگیل تناسلی) ناشی از کدام تیپ‌های HPV است؟",
+       opts:[["الف","تیپ‌های کم‌خطر ۶ و ۱۱"],["ب","تیپ‌های پرخطر ۱۶ و ۱۸"],["ج","تیپ‌های ۳۱ و ۴۵"],["د","تیپ‌های ۱ و ۲"]],
+       correct:0,
+       exp:"HPV ۶ و ۱۱: زگیل تناسلی. HPV ۱۶ و ۱۸: سرطان سرویکس."},
+      {n:65, level:"hard", q:"ضایعات Beefy red بدون درد با علامت ناودان (Groove sign) و اجسام دونوان در اسمیر. تشخیص چیست؟",
+       opts:[["الف","دوناوانوزیس (Granuloma inguinale)"],["ب","شانکروئید"],["ج","سیفلیس اولیه"],["د","LGV"]],
+       correct:0,
+       exp:"دوناوانوزیس: Beefy red + اجسام دونوان."},
+      {n:66, level:"easy", q:"قانون کلی در برخورد با هر نوع عفونت منتقله از راه جنسی (STI) چیست؟",
+       opts:[["الف","درخواست تست HIV + درمان پارتنر"],["ب","بستری فوری"],["ج","شیمی‌درمانی ۶ ماه"],["د","کورتون دوز بالا"]],
+       correct:0,
+       exp:"با هر STI: تست HIV + بررسی/درمان پارتنر الزامی است."},
+      {n:67, level:"easy", q:"ترشحات واژینال خاکستری با بوی ماهی، Clue cells و Whiff مثبت. تشخیص چیست؟",
+       opts:[["الف","واژینوز باکتریال (Gardnerella)"],["ب","کاندیدیاریس واژینال"],["ج","تریکومونیاریس"],["د","کلامیدیا"]],
+       correct:0,
+       exp:"واژینوز باکتریال (BV): ترشح خاکستری + بوی ماهی + Clue cells + Whiff مثبت. درمان: مترونیدازول."},
+      {n:68, level:"medium", q:"کدام گزینه در مورد زخم سیفلیس و هرپس صحیح است؟",
+       opts:[["الف","سیفلیس بدون درد، هرپس دردناک"],["ب","سیفلیس دردناک، هرپس بدون درد"],["ج","هر دو بدون درد"],["د","هر دو دردناک"]],
+       correct:0,
+       exp:"سیفلیس: بدون درد. هرپس: دردناک."},
+      {n:69, level:"medium", q:"درمان گنوره در مردان کدام است؟",
+       opts:[["الف","سفتریاکسون ۲۵۰mg IM تک‌دوز"],["ب","داکسی‌سیکلین ۷ روز"],["ج","آزیترومایسین ۱g تک‌دوز"],["د","پنی‌سیلین تک‌دوز"]],
+       correct:0,
+       exp:"گنوره: سفتریاکسون ۲۵۰mg IM تک‌دوز یا سفیکسیم ۴۰۰mg خوراکی تک‌دوز."},
+      {n:70, level:"hard", q:"کدام ویروس بالاترین انتقال‌پذیری از راه سوزن را دارد؟",
+       opts:[["الف","HIV"],["ب","HCV"],["ج","HBV"],["د","CCHF"]],
+       correct:2,
+       exp:"HBV بالاترین انتقال‌پذیری از راه سوزن."}
+    ]},
+    { section: "بخش ۸: HIV و ایدز", items: [
+      {n:71, level:"medium", q:"بیمار HIV با CD4 زیر ۵۰. پروفیلاکسی اولیه MAC با کدام دارو؟",
+       opts:[["الف","آزیترومایسین (یا کلاریترومایسین) هفتگی"],["ب","کوتریموکسازول روزانه"],["ج","فلوکونازول هفتگی"],["د","گانسیکلوویر خوراکی"]],
+       correct:0,
+       exp:"CD4 < ۵۰: آزیترومایسین ۱۲۰۰mg هفتگی یا کلاریترومایسین برای MAC."},
+      {n:72, level:"easy", q:"در HIV با CD4 زیر ۲۰۰، پروفیلاکسی اولیه PCP با کدام دارو؟",
+       opts:[["الف","کوتریموکسازول (TMP-SMX)"],["ب","آزیترومایسین"],["ج","فلوکونازول"],["د","گانسیکلوویر"]],
+       correct:0,
+       exp:"CD4 < ۲۰۰: کوتریموکسازول برای PCP."},
+      {n:73, level:"medium", q:"پزشک حین خون‌گیری از بیمار HIV دچار نیدل‌استیک شده است. PEP چه زمانی و چند روز؟",
+       opts:[["الف","شروع ظرف ۲ ساعت (حداکثر ۷۲ ساعت) / ۲۸ روز"],["ب","۱ هفته / ۲ ماه"],["ج","۲۴ ساعت / ۷ روز"],["د","نیازی نیست"]],
+       correct:0,
+       exp:"PEP: شروع زیر ۲ ساعت (حداکثر ۷۲ ساعت) + ۲۸ روز رژیم ۳ دارویی."},
+      {n:74, level:"medium", q:"شایع‌ترین ضایعه فضاگیر مغزی با Ring enhancement در HIV با CD4 زیر ۱۰۰؟",
+       opts:[["الف","Toxoplasma gondii"],["ب","Cryptococcus neoformans"],["ج","PML"],["د","CMV"]],
+       correct:0,
+       exp:"توکسوپلاسموز مغزی شایع‌ترین ضایعه فضاگیر با Ring enhancement است. درمان: پیریمتامین + سولفادیازین + اسید فولینیک."},
+      {n:75, level:"easy", q:"شایع‌ترین بدخیمی مرتبط با ایدز (HHV-8) با ندول‌های بنفش روی پوست و مخاط؟",
+       opts:[["الف","سارکوم کاپوزی"],["ب","لنفوم بورکیت"],["ج","SCC"],["د","ملانوم"]],
+       correct:0,
+       exp:"سارکوم کاپوزی توسط HHV-8 ایجاد می‌شود."},
+      {n:76, level:"easy", q:"تست تاییدکننده نهایی HIV پس از ELISA مثبت چیست؟",
+       opts:[["الف","Western Blot یا HIV RNA PCR"],["ب","کشت خون"],["ج","CD4"],["د","PPD"]],
+       correct:0,
+       exp:"تایید نهایی با Western Blot یا HIV RNA PCR."},
+      {n:77, level:"medium", q:"پروفیلاکسی PCP در CD4 زیر چند شروع می‌شود؟",
+       opts:[["الف","۵۰۰"],["ب","۳۵۰"],["ج","۲۰۰"],["د","۱۰۰"]],
+       correct:2,
+       exp:"CD4 < ۲۰۰: پروفیلاکسی PCP."},
+      {n:78, level:"hard", q:"پروفیلاکسی توکسوپلاسموز در CD4 زیر چند شروع می‌شود؟",
+       opts:[["الف","۲۰۰"],["ب","۱۰۰"],["ج","۵۰"],["د","۵۰۰"]],
+       correct:1,
+       exp:"CD4 < ۱۰۰: پروفیلاکسی توکسوپلاسموز."},
+      {n:79, level:"hard", q:"خطر انتقال HIV با نیدل استیک چقدر است؟",
+       opts:[["الف","۰.۱٪"],["ب","۵٪"],["ج","۱۰٪"],["د","۳۰٪"]],
+       correct:0,
+       exp:"خطر انتقال HIV با نیدل استیک ۰.۱٪ است."},
+      {n:80, level:"medium", q:"حداقل درمان HIV چند دارو است؟",
+       opts:[["الف","۱ دارو"],["ب","۲ دارو"],["ج","۳ دارو"],["د","۴ دارو"]],
+       correct:2,
+       exp:"درمان HIV حداقل ۳ دارویی است."}
+    ]},
+    { section: "بخش ۹: پودروم‌های اولیه و عفونت‌های پوستی", items: [
+      {n:81, level:"easy", q:"کودک ۷ ساله با ضایعات تاولی پاره‌شده اطراف بینی و دهان با کراست عسلی‌رنگ. تشخیص؟",
+       opts:[["الف","زردزخم (Impetigo)"],["ب","اریزیپلاس"],["ج","سلولیت"],["د","فاشیت نکروزان"]],
+       correct:0,
+       exp:"کراست عسلی‌رنگ، مشخصه کلاسیک زردزخم است."},
+      {n:82, level:"medium", q:"ویژگی مشخصه اریزیپلاس در افتراق با سلولیت کدام است؟",
+       opts:[["الف","حاشیه کاملاً مشخص و برآمده (Well-demarcated)"],["ب","حاشیه مبهم و درگیری عمیق"],["ج","عدم تب"],["د","بروز در دیابتی‌ها"]],
+       correct:0,
+       exp:"اریزیپلاس سطحی با حاشیه کاملاً مشخص و برآمده."},
+      {n:83, level:"hard", q:"بیمار دیابتی با قرمزی ساق، درد بسیار شدید نامتناسب با ظاهر، کرپیتاسیون گاز و شوک. اقدام درمانی نجات‌بخش؟",
+       opts:[["الف","دبریدمان جراحی فوری و وسیع + آنتی‌بیوتیک وسیع‌الطیف"],["ب","فقط آنتی‌بیوتیک خوراکی"],["ج","پانسمان مرطوب"],["د","کورتون"]],
+       correct:0,
+       exp:"فاشیت نکروزان: اورژانس جراحی با دبریدمان فوری + آنتی‌بیوتیک."},
+      {n:84, level:"easy", q:"چود کوک‌های متعدد و راجعه (Furunculosis) در بزرگسال، ارزیابی کدام بیماری را ضروری می‌سازد؟",
+       opts:[["الف","دیابت ملیتوس"],["ب","هیپوتیروئیدی"],["ج","فشار خون بالا"],["د","سیروز"]],
+       correct:0,
+       exp:"فورانکولوز راجعه با دیابت کنترل‌نشده همراهی دارد."},
+      {n:85, level:"easy", q:"کدام آنتی‌بیوتیک موضعی برای زردزخم محدود و پاکسازی ناقلی استاف بینی؟",
+       opts:[["الف","موپیروسین"],["ب","اریترومایسین"],["ج","کلوتریمازول"],["د","هیدروکورتیزون"]],
+       correct:0,
+       exp:"موپیروسین موضعی خط اول امپتیگو محدود و حذف ناقلی استاف بینی."},
+      {n:86, level:"medium", q:"کدام گزینه در مورد سلولیت صحیح است؟",
+       opts:[["الف","عفونت عمقی پوست و زیرجلد؛ حدود نامشخص"],["ب","عفونت سطحی؛ حدود مشخص"],["ج","عامل فقط استاف"],["د","نیازی به درمان ندارد"]],
+       correct:0,
+       exp:"سلولیت: عمقی، حدود نامشخص."},
+      {n:87, level:"hard", q:"درمان فاشیت نکروزان شامل چه مواردی است؟",
+       opts:[["الف","دبریدمان فوری + آنتی‌بیوتیک وسیع‌الطیف"],["ب","فقط آنتی‌بیوتیک"],["ج","فقط جراحی"],["د","کورتون"]],
+       correct:0,
+       exp:"دبریدمان فوری + آنتی‌بیوتیک وسیع‌الطیف."},
+      {n:88, level:"medium", q:"کدام عفونت پوستی نیازمند بستری و تخلیه جراحی است؟",
+       opts:[["الف","فورانکل"],["ب","کربانکل"],["ج","زرد زخم"],["د","فولیکولیت"]],
+       correct:1,
+       exp:"کربانکل نیازمند بستری، تخلیه جراحی و آنتی‌بیوتیک."},
+      {n:89, level:"medium", q:"کدام گزینه در مورد اریزیپلاس صحیح است؟",
+       opts:[["الف","عفونت سطحی با حدود کاملاً مشخص"],["ب","عفونت عمقی؛ حدود نامشخص"],["ج","عامل فقط استاف"],["د","نیازی به درمان ندارد"]],
+       correct:0,
+       exp:"اریزیپلاس: سطحی، حدود مشخص."},
+      {n:90, level:"hard", q:"کدام گزینه در مورد هیدرادنیت چرکی صحیح است؟",
+       opts:[["الف","عفونت مزمن عودکننده غدد آپوکرین"],["ب","عفونت حاد"],["ج","عامل فقط استاف"],["د","نیاز به آنتی‌بیوتیک ندارد"]],
+       correct:0,
+       exp:"هیدرادنیت چرکی: عفونت مزمن عودکننده غدد آپوکرین."}
+    ]},
+    { section: "بخش ۱۰: کاندیدیازیس", items: [
+      {n:91, level:"easy", q:"در معاینه دهان بیمار با نقص ایمنی، پلاک‌های سفید قابل کندن روی زبان با سطح قرمز زیرین. درمان؟",
+       opts:[["الف","نیستاتین موضعی یا فلوکونازول خوراکی"],["ب","آسیکلوویر"],["ج","آمفوتریسین B وریدی"],["د","متوترکسات"]],
+       correct:0,
+       exp:"برفک دهان: نیستاتین موضعی یا فلوکونازول خوراکی."},
+      {n:92, level:"hard", q:"بیمار سرطانی نوتروپنیک با کاتتر ورید مرکزی، تب مقاوم و کشت خون Candida albicans. حیاتی‌ترین اقدام اولیه؟",
+       opts:[["الف","خارج کردن فوری کاتتر ورید مرکزی (CVC)"],["ب","افزایش دوز آنتی‌بیوتیک"],["ج","تزریق پلاسما"],["د","تعویض به سفتریاکسون"]],
+       correct:0,
+       exp:"در کاندیدمیا، خارج کردن فوری کاتتر + شروع ضد قارچ."},
+      {n:93, level:"medium", q:"بیمار ایدز با دیسفاژی و اگزوداهای سفید در مری. درمان سیستمیک؟",
+       opts:[["الف","فلوکونازول ۱۴-۲۱ روز"],["ب","نیستاتین موضعی"],["ج","امپرازول"],["د","آمپی‌سیلین"]],
+       correct:0,
+       exp:"ازوفاژیت کاندیدایی: فلوکونازول سیستمیک."},
+      {n:94, level:"medium", q:"خط اول کاندیدیازیس تهاجمی در بیماران بدخیمی و نوتروپنی؟",
+       opts:[["الف","اکینوکاندین‌ها (کاسپوفونجین/میکافونجین)"],["ب","گریزئوفولوین"],["ج","نیستاتین خوراکی"],["د","مترونیدازول"]],
+       correct:0,
+       exp:"اکینوکاندین‌ها خط اول کاندیدیازیس تهاجمی در نوتروپنیک."},
+      {n:95, level:"easy", q:"کدام یک فاکتور مستعدکننده کاندیدیازیس نیست؟",
+       opts:[["الف","آنتی‌بیوتیک وسیع‌الطیف"],["ب","کاتتر وریدی و TPN"],["ج","لووتیروکسین"],["د","دیابت، دیالیز، کورتون"]],
+       correct:2,
+       exp:"لووتیروکسین ریسک کاندیدا ندارد."},
+      {n:96, level:"medium", q:"کدام گزینه در مورد کاندیدمی صحیح است؟",
+       opts:[["الف","عفونت خونی با کاندیدا؛ مورتالیتی ~۴۰٪"],["ب","عفونت ادراری"],["ج","عفونت پوستی"],["د","بدون نیاز به درمان"]],
+       correct:0,
+       exp:"کاندیدمی: عفونت خونی، مورتالیتی ~۴۰٪."},
+      {n:97, level:"hard", q:"کدام گزینه در مورد کاندیدیازیس منتشر صحیح است؟",
+       opts:[["الف","اکثراً در نوتروپنیک؛ ماکولوباپول ۰.۵-۱ cm"],["ب","فقط در HIV"],["ج","فقط در کودکان"],["د","بدون نیاز به درمان"]],
+       correct:0,
+       exp:"کاندیدیازیس منتشر: نوتروپنیک، ماکولوباپول ۰.۵-۱ cm."},
+      {n:98, level:"hard", q:"درمان کاندیدیازیس منتشر یا ارگان عمقی؟",
+       opts:[["الف","آمفوتریسین B ۱ mg/kg"],["ب","فلوکونازول"],["ج","نیستاتین"],["د","کلوتریمازول"]],
+       correct:0,
+       exp:"آمفوتریسین B برای کاندیدیازیس منتشر."},
+      {n:99, level:"medium", q:"درمان ازوفاژیت کاندیدایی؟",
+       opts:[["الف","فلوکونازول سیستمیک"],["ب","نیستاتین موضعی"],["ج","آمفوتریسین B"],["د","آسیکلوویر"]],
+       correct:0,
+       exp:"ازوفاژیت: فلوکونازول. برفک: نیستاتین."},
+      {n:100, level:"hard", q:"کدام گزینه در مورد کاسپوفونژین صحیح است؟",
+       opts:[["الف","بدون نیاز به تنظیم دوز کلیوی"],["ب","نیاز به تنظیم دوز کلیوی"],["ج","ممنوع در بارداری"],["د","فقط در کودکان"]],
+       correct:0,
+       exp:"کاسپوفونژین بدون نیاز به تنظیم دوز کلیوی."}
+    ]}
+  ];
+
+  /* ==================== DATA: MINDMAP ==================== */
+  var MINDMAP = [
+    {num:"۱", title:"گوارش و اسهال", branches:[
+      {t:"تعاریف پایه", items:["<strong>اسهال (مرجع):</strong> > ۲۰۰-۲۵۰ گرم/روز، > ۳ بار/روز","<strong>اسهال (انجمن گوارش ایران):</strong> > ۳۰۰-۴۵۰ گرم/روز","<strong>حاد:</strong> < ۲ هفته | <strong>پایدار:</strong> ۲-۴ هفته | <strong>مزمن:</strong> > ۴ هفته"]},
+      {t:"مکانیسم", items:["<strong>غیرالتهابی:</strong> ETEC، ویبریوکلرا، استاف، باسیلوس سرئوس، ویروس‌ها","<strong>التهابی:</strong> EHEC، EIEC، شیگلا، یرسینیا، لیستریا، C. difficile"]},
+      {t:"تیپ انتریک vs کولیک", items:["<strong>انتریک (روده باریک):</strong> حجم زیاد، تعداد کم، غالباً غیرالتهابی","<strong>کولیک (کولون):</strong> حجم کم، تعداد زیاد (۱۰-۱۵ بار)، Urgency، تنسموس"]},
+      {t:"نکات کلیدی", items:["> ۹۰٪ اسهال‌های حاد منشأ عفونی؛ شایع‌ترین: <em>ویروس‌ها</em>","۸۰٪ اسهال‌های التهابی نیازی به آنتی‌بیوتیک ندارند","وبا: آنتی‌بیوتیک فقط قطع چرخه انتقال","آمپ: تروفوزوئیت درمان می‌شود نه کیست","EHEC: <em>آنتی‌بیوتیک ممنوع</em> (خطر HUS)"]},
+      {t:"مسمومیت غذایی (کمون)", items:["۱-۶ ساعت: استاف اورئوس، باسیلوس سرئوس (استفراغی)","۸-۱۶ ساعت: کلستریدیوم پرفرینژنس، باسیلوس سرئوس (اسهالی)","> ۱۶ ساعت: ویبریوکلرا، ETEC، EHEC، سالمونلا، کمپیلوباکتر، شیگلا"]},
+      {t:"عوارض پس از عفونت", items:["کمپیلوباکتر → گیلن‌باره","EHEC، شیگلا تیپ ۱ → HUS","شیگلا، سالمونلا، کمپیلوباکتر، یرسینیا → آرتریت واکنشی"]},
+      {t:"درمان مایع", items:["ترتیب ارجحیت: <strong>رینگر لاکتات > رینگر > نرمال سالین</strong>","بهترین شاخص پایش: برون‌ده ادراری","تنها آزمایش ضروری: <em>پتاسیم (K+)</em>"]}
+    ]},
+    {num:"۲", title:"پنومونی (CAP/HAP/VAP)", branches:[
+      {t:"تعاریف", items:["<strong>CAP:</strong> اکتسابی از جامعه","<strong>HAP:</strong> اکتسابی از بیمارستان (≥ ۴۸ ساعت بستری)","<strong>VAP:</strong> مرتبط با ونتیلاتور (۵ روز اول انتوباسیون)"]},
+      {t:"الگوهای پاتولوژیک", items:["CAP باکتریال → <em>لوبار</em>","CAP ویرال/نوموسیستیس → آلوئولار","HAP → برونکوپنومونی | VAP → برونشیت"]},
+      {t:"CURB-65", items:["C: گیجی | U: اوره > ۷ | R: RR ≥ ۳۰ | B: BP < ۹۰/۶۰ | ۶۵: سن ≥ ۶۵","امتیاز ۰: سرپایی | ۱-۲: بستری | ≥ ۳: ICU"]},
+      {t:"درمان تجربی", items:["سرپایی سالم: ماکروئید یا داکسی‌سیکلین","بستری غیر ICU: فلوروکینولون تنفسی یا بتالاکتام + ماکروئید","بستری ICU: بتالاکتام + آزیترومایسین یا فلوروکینولون","MRSA: <em>لینزولید</em> (ونکومایسین جایگزین)","سودوموناس: بتالاکتام ضدسودوموناس + سیپرو/لووفلوکساسین"]},
+      {t:"HAP/VAP پرخطر", items:["پوشش هم‌زمان: آنتی‌سودومونا (سفپیم/پیپراسیلین-تازوباکتام) + ضد MRSA (وانکومایسین/لینزولید)"]},
+      {t:"پیگیری", items:["تب و لکوسیتوز: ۲-۴ روز | یافته فیزیکی: طولانی‌تر | CXR: ۴-۱۲ هفته","عود در همان سگمنت → <em>نئوپلاسم</em> (CT + برونکوسکوپی)"]},
+      {t:"تله‌های طلایی", items:["HAP: مورتالیتی کمتر ولی تشخیص دشوارتر از VAP","پنومونی + هیپوناترمی + اسهال + علائم CNS = <em>لژیونلا</em>","الکلی + خلط ژله‌ای قرمز = <em>کلبسیلا</em>","جوان + Walking pneumonia = <em>مایکوپلاسما</em>"]}
+    ]},
+    {num:"۳", title:"هپاتیت‌های ویروسی", branches:[
+      {t:"مقایسه ویروس‌ها", items:["HAV: RNA، مدفوعی-دهانی، خودمحدودشونده","HBV: <em>DNA</em>، خون/جنسی/پری‌ناتال","HCV: RNA، خون/جنسی/پری‌ناتال، ۷۰-۸۵٪ مزمن","HDV: RNA ناقص، وابسته به HBsAg","HEV: RNA، مدفوعی-دهانی (آب آلوده)"]},
+      {t:"سرولوژی HBV", items:["<strong>HBsAg:</strong> عفونت حاد یا مزمن","<strong>Anti-HBs:</strong> ایمنی (واکسن یا بهبودی)","<strong>HBeAg:</strong> تکثیر بالا","<strong>IgM Anti-HBc:</strong> تنها مارکر در Window Period","<strong>IgG Anti-HBc:</strong> عفونت قبلی یا مزمن"]},
+      {t:"الگوهای سرولوژیک", items:["حاد: HBsAg+, IgM Anti-HBc+","مزمن: HBsAg+, IgG Anti-HBc+","Window: HBsAg-, IgM Anti-HBc+, Anti-HBs-","بهبودی: HBsAg-, Anti-HBs+, IgG Anti-HBc+","واکسیناسیون: فقط Anti-HBs+"]},
+      {t:"HEV در بارداری", items:["مرگ‌ومیر تا ۲۰٪ در سه‌ماهه سوم","درمان فولمیننت: <em>ریباویرین</em> (ممنوع در بارداری)"]},
+      {t:"نوزاد مادر HBV+", items:["<strong>واکسن + HBIG</strong> در ۱۲ ساعت اول در دو سمت مجزا"]},
+      {t:"درمان", items:["HBV حاد شدید: تنوفوویر یا انتکاویر","HCV: DAA (SVR12 = منفی شدن ۱۲ هفته پس از درمان)","کورتون در هپاتیت: <em>ممنوع</em>"]},
+      {t:"تله‌های طلایی", items:["HAV → فقط AST/ALT بالا (نه ALP)","HBsAg پایین = فولمیننت (رابطه معکوس)","مادر مبتلا: زایمان طبیعی و شیردهی مجاز"]}
+    ]},
+    {num:"۴", title:"عفونت‌های ادراری (UTI)", branches:[
+      {t:"تعاریف", items:["<strong>Uncomplicated:</strong> خانم ۱۵-۳۵ سال، غیرباردار، بدون بیماری زمینه‌ای","<strong>هر UTI در مرد = Complicated</strong>","<strong>ASB:</strong> کشت ۱۰⁵ بدون علامت"]},
+      {t:"معیار کشت مثبت", items:["خانم علامت‌دار: ۱۰³ | مرد علامت‌دار: ۱۰³","کاتتر ادراری: ۱۰² | بدون علامت: ۱۰⁵"]},
+      {t:"آنالیز ادرار", items:["لوکوسیت > ۱۰ = مثبت | لوکوسیت استراز = پیوری","<em>کست گلبول سفید</em> = پاتوگنومونیک پیلونفریت","نیتریت مثبت = گرم منفی"]},
+      {t:"ASB: چه زمانی درمان؟", items:["<strong>فقط:</strong> بارداری (با ۲ کشت)، قبل از جراحی اورولوژیک تهاجمی، پیوند کلیه، نوتروپنی","سالمندان بدون علامت: <em>درمان نشود</em>"]},
+      {t:"درمان Lower UTI", items:["نیتروفورانتوئین: ۵-۷ روز | کوتریموکسازول: ۳ روز","کینولون: ۳ روز | بتالاکتام: ۵-۷ روز"]},
+      {t:"درمان Upper UTI", items:["کینولون: ۷ روز | بتالاکتام: ۱-۲ هفته | BLBLI مقاوم: ۱۴ روز"]},
+      {t:"تله‌های طلایی", items:["فریکوئنسی = غیراختصاصی‌ترین علامت","آزیترومایسین: <em>در UTI مناسب نیست</em>","فسفومایسین: منسوخ","پروستاتیت: آناتومیک پایین، ولی Upper"]}
+    ]},
+    {num:"۵", title:"سل، مننژیت و عفونت‌های CNS", branches:[
+      {t:"سل - نکات کلیدی", items:["تشخیص قطعی: <em>کشت مثبت</em>","انتقال: <strong>هوابرد</strong> (قطرات ۵-۱۰ میکرون)","PPD/TST: فقط سل نهفته","فلوروکینولون در مشکوک به سل: <em>ممنوع</em>"]},
+      {t:"آستانه TST", items:["> ۵mm: HIV، تماس با فعال، نقص ایمنی","> ۱۰mm: کودکان < ۴ سال، دیابت، بدخیمی","> ۱۵mm: سن > ۴ سال با ریسک کم"]},
+      {t:"درمان سل", items:["<strong>۲ ماه HRZE + ۴ ماه HR</strong>","MDR-TB: مقاومت به INH + RIF","GeneXpert: تشخیص سل + مقاومت ریفامپین < ۲ ساعت","عوارض: اتامبوتول (نوریت بینایی)، ایزونیازید (نوروپاتی محیطی → B6)، ریفامپین (نارنجی شدن ترشحات)"]},
+      {t:"مننژیت - CSF", items:["باکتریال: PMN غالب، قند پایین (< ۰.۴)، پروتئین بالا","ویروسی: لنفوسیت غالب، قند نرمال","سلولی/قارچی: لنفوسیت، قند پایین، پروتئین بسیار بالا"]},
+      {t:"درمان مننژیت", items:["۲-۵۰ سال: سفتریاکسون + وانکومایسین","> ۵۰ سال یا نقص ایمنی: + <em>آمپی‌سیلین</em> (لیستریا)","دگزامتازون: قبل یا همزمان با اولین دوز آنتی‌بیوتیک","PEP مننگوکوک: ریفامپین یا سیپرو یا سفتریاکسون تک‌دوز"]},
+      {t:"انسفالیت", items:["شایع‌ترین: HSV1 → درگیری لوب تمپورال، تشنج، اختلال رفتار","درمان: <em>آسیکلوویر وریدی</em> فوری"]}
+    ]},
+    {num:"۶", title:"عفونت‌های مقاربتی (STI) و HIV", branches:[
+      {t:"STI - زخم‌ها", items:["<strong>بدون درد:</strong> سیفلیس، دوناوانوزیس","<strong>دردناک:</strong> هرپس، شانکروئید","شانکروئید: Punch-out + لنفادنوپاتی یک‌طرفه چرکی","دوناوانوزیس: Beefy red + اجسام دونوان + Groove sign"]},
+      {t:"STI - درمان", items:["گنوره: سفتریاکسون ۲۵۰mg IM تک‌دوز","کلامیدیا: آزیترومایسین ۱g یا داکسی‌سیکلین ۷ روز","<strong>گنوره + کلامیدیا هم‌زمان درمان می‌شوند</strong>"]},
+      {t:"HPV و HSV", items:["HPV ۶، ۱۱: زگیل تناسلی | HPV ۱۶، ۱۸: سرطان سرویکس","HSV فعال حین زایمان: <em>سزارین اجباری</em>"]},
+      {t:"HIV - انتقال", items:["شایع‌ترین راه جهانی: تماس جنسی محافظت‌نشده","نیدل استیک: <em>۰.۱٪</em> (نه ۵٪)","<strong>HBV</strong> بالاترین انتقال از راه سوزن"]},
+      {t:"HIV - پروفیلاکسی", items:["PCP: CD4 < ۲۰۰ → کوتریموکسازول","توکسوپلاسموز: CD4 < ۱۰۰ → کوتریموکسازول","MAC: CD4 < ۵۰ → آزیترومایسین هفتگی","PEP نیدل استیک: شروع < ۲ ساعت (حداکثر ۷۲ ساعت) + ۲۸ روز ۳ دارو"]},
+      {t:"HIV - تظاهرات", items:["توکسوپلاسموز مغزی: Ring enhancement شایع‌ترین ضایعه فضاگیر","سارکوم کاپوزی: شایع‌ترین بدخیمی (HHV-8)","لکوپلاکی مویی زبان: نشانه تشخیصی مهم","تایید تشخیص: Western Blot یا HIV RNA PCR"]},
+      {t:"قانون طلایی STI", items:["با هر STI: <em>تست HIV الزامی + درمان پارتنر</em>"]}
+    ]},
+    {num:"۷", title:"پوست و نسج نرم", branches:[
+      {t:"زرد زخم (Impetigo)", items:["کراست عسلی رنگ (Honey-colored crust)","شایع‌ترین عفونت سطحی در کودکان","درمان: موپیروسین موضعی | خوراکی: کلوگزاسیلین"]},
+      {t:"اریزیپلاس vs سلولیت", items:["<strong>اریزیپلاس:</strong> سطحی، حدود <em>مشخص</em>، پوست پرتقالی","<strong>سلولیت:</strong> عمقی، حدود <em>نامشخص</em>"]},
+      {t:"فورانکل vs کربانکل", items:["فورانکل: علائم موضعی، بدون بستری","کربانکل: علائم سیستمیک، بستری + تخلیه جراحی"]},
+      {t:"فاشیت نکروزان", items:["درد نامتناسب با ظاهر","کرپیتاسیون گاز + شوک","اورژانس: <em>دبریدمان جراحی فوری + آنتی‌بیوتیک وسیع‌الطیف</em>"]},
+      {t:"فورانکولوز راجعه", items:["→ بررسی <em>دیابت</em> و ناقلی استاف بینی"]},
+      {t:"موپیروسین", items:["درمان امپتیگو + پاکسازی ناقلی استاف بینی (MRSA)"]}
+    ]},
+    {num:"۸", title:"کاندیدیازیس", branches:[
+      {t:"اشکال بالینی", items:["برفک دهان، ازوفاژیت، واژینیت، بالانیت، اونیکومایکوزیس","کاندیدمی (مورتالیتی ~۴۰٪)، اندوفتالمیت، CNS"]},
+      {t:"درمان بر اساس محل", items:["برفک دهان: <em>نیستاتین موضعی</em>","ازوفاژیت: <em>فلوکونازول سیستمیک</em> (۱۴-۲۱ روز)","کاندیدمی/تهاجمی: <em>اکینوکاندین</em> (کاسپوفونجین)","منتشر/ارگان عمقی: آمفوتریسین B"]},
+      {t:"کاندیدمی", items:["خروج فوری کاتتر وریدی <em>الزامی</em>","کشت خون ممکن است منفی باشد"]},
+      {t:"ریسک فاکتورها", items:["آنتی‌بیوتیک وسیع‌الطیف، کاتتر، TPN، دیابت، کورتون، HIV"]},
+      {t:"تله‌های طلایی", items:["کشت مثبت = کلونیزاسیون (نه بیماری)","کشت در برفک/خلط: بی‌ارزش","کاندیدوری بدون تهاجم: نیاز به درمان ندارد"]}
+    ]},
+    {num:"۹", title:"سالمونلا و تب تیفوئید", branches:[
+      {t:"کشت‌ها بر اساس زمان", items:["هفته اول: <em>کشت خون</em> (۹۰٪)","هفته دوم: مدفوع | هفته سوم: ادرار","گلد استاندارد: <em>کشت مغز استخوان</em>"]},
+      {t:"تظاهرات کلاسیک", items:["تب پله‌ای + برادیکاردی نسبی (Faget sign)","Rose spots (ماکول صورتی روی تنه)","درد RLQ + Pseudo-appendicitis","تب + لکوپنی (برخلاف سایر عفونت‌ها)"]},
+      {t:"عوارض", items:["<strong>هفته سوم:</strong> سوراخ‌شدگی روده (Perforation) در پلاک‌های پی‌بر ایلئوم","خونریزی گوارشی، میوکاردیت، مننژیت"]},
+      {t:"ناقل مزمن", items:["مخزن: <em>کیسه صفرا</em> (به‌ویژه با سنگ)","دفع باکتری > ۱ سال"]},
+      {t:"درمان", items:["خط اول: سفتریاکسون، آزیترومایسین، سیپروفلوکساسین","Pseudo-appendicitis بدون ریباند: <em>ممنوعیت جراحی</em>"]},
+      {t:"تله‌های طلایی", items:["تست ویدال: <em>بی‌ارزش</em>","لکوپنی: طبیعی‌تر از لکوسیتوز","پرفوراسیون: پوشش کل فلور (مروپنم + آزیترو) + جراحی"]}
+    ]},
+    {num:"۱۰", title:"سیفلیس", branches:[
+      {t:"مراحل بیماری", items:["اولیه: <em>شانکر بدون درد</em> (۲-۶ هفته)","ثانویه: <em>راش کف دست و پا</em> + کندیلوم لاتا (۲-۸ هفته)","نهفته: بدون علامت | ثالثیه: ۱۰-۴۰ سال بعد"]},
+      {t:"تظاهرات ثالثیه", items:["نوروسیفلیس: پارسیس، Tabes dorsalis","<strong>مردمک آرژیل-رابرتسون:</strong> پاسخ تطابق دارد، به نور ندارد","قلبی: آنوریسم آئورت | گوم: ندول‌های پوستی"]},
+      {t:"سیفلیس مادرزادی", items:["انتقال از جفت (ماه ۴ به بعد)","پیشگیری: درمان مادر قبل از هفته ۱۶","زودرس: رینیت، استئوکندریت | دیررس: کرانیت، کری"]},
+      {t:"تشخیص", items:["<strong>RPR/VDRL:</strong> غربالگری + فالوآپ","<strong>FTA-ABS/TPPA:</strong> تأیید (مادام‌العمر مثبت)","نوروسیفلیس: سرولوژی + CSF"]},
+      {t:"درمان", items:["اولیه/ثانویه/Early latent: پنی‌سیلین بنزاتین ۲.۴ MU IM تک‌دوز","Late latent: ۳ دوز هفتگی","نوروسیفلیس: پنی‌سیلین کریستال وریدی ۱۰-۱۴ روز"]},
+      {t:"Jarisch-Herxheimer", items:["تب و لرز حاد ۲ ساعت پس از پنی‌سیلین","خودمحدودشونده | کورتون ممنوع"]},
+      {t:"تله‌های طلایی", items:["سیفلیس: وزیکول ندارد","لنفادنوپاتی اپی‌تروکلئار: اختصاصی ثانویه","فالوآپ: <em>فقط RPR/VDRL</em>"]}
+    ]},
+    {num:"۱۱", title:"دنگی و آربوویروس‌ها", branches:[
+      {t:"ناقل و ویروس", items:["ویروس: Flaviviridae، ۴ سروتایپ","ناقل: <em>Aedes aegypti</em> و Aedes albopictus (روز فعال)"]},
+      {t:"سیر سه‌فازی", items:["تب‌دار: ۲-۷ روز | بحرانی: ۲۴-۷۲ ساعت پس از قطع تب | بهبودی","مشخصه اصلی: <strong>نشت پلاسما</strong>"]},
+      {t:"علائم هشدار", items:["درد شکم، استفراغ مکرر > ۴ بار در ساعت","خونریزی، بی‌حالی، الیگوری","افزایش هماتوکریت (HCT ≥ ۲۰٪)"]},
+      {t:"علائم آزمایشگاهی", items:["افزایش HCT، لکوپنی، ترومبوسیتوپنی","RT-PCR + NS1 (قبل از روز ۵) | IgM (روز ۳-۵)"]},
+      {t:"درمان", items:["<strong>NSAID و آسپرین: ممنوعیت مطلق</strong>","مسکن: فقط استامینوفن (فاصله ۶ ساعت)","مایع درمانی بر اساس گره (I-IV)","تزریق پلاکت: معمولاً توصیه نمی‌شود"]},
+      {t:"تله‌های طلایی", items:["شوک در فاز اولیه: <em>رخ نمی‌دهد</em>","بیماری هرگز مزمن نمی‌شود","Dengvaxia: فقط در سرولوژی مثبت","تب طولانی: رد تشخیص"]}
+    ]},
+    {num:"۱۲", title:"CCHF و تب‌های هموراژیک", branches:[
+      {t:"مشخصات", items:["شایع‌ترین تب هموراژیک ویروسی در ایران","خانواده: Bunyaviridae، ناقل: <em>کنه هیالوما</em>","انتقال Transovarial | دام‌ها: مخزن بدون علامت"]},
+      {t:"انتقال به انسان", items:["تماس با خون دام حین ذبح (~۵۰٪)","گزش کنه | انتقال بیمارستانی"]},
+      {t:"مراحل", items:["کمون: ۱-۱۴ روز | مقدماتی: ۳-۱۶ روز","بدون تب: ۲۴-۴۸ ساعت | خونریزی‌دهنده: ۲-۴ روز"]},
+      {t:"تشخیص و درمان", items:["تب > ۱۶ روز: <em>رد تشخیص</em>","سرولوژی: روزهای ۱۰، ۵، ۰ | PCR در بیماری شدید","درمان: <strong>ریباویرین</strong> (فقط فاز مقدماتی)","پروفیلاکسی: ریباویرین ۲۰۰mg × ۵ روز"]},
+      {t:"MSF vs CCHF", items:["MSF: Tache noire + داکسی‌سیکلین","CCHF: پتشی + PT بالا + ریباویرین"]},
+      {t:"پیشگیری", items:["نگهداری لاشه ۲۴-۴۸ ساعت در دمای ۴ درجه","انجماد فوری: <em>اشتباه</em>"]},
+      {t:"تله‌های طلایی", items:["ریباویرین در بارداری: ممنوع (۶ ماه)","مرگ‌ومیر: ۷-۱۰٪ (فرم شدید ۴۰-۵۰٪)"]}
+    ]},
+    {num:"۱۳", title:"آنفلوانزا", branches:[
+      {t:"ویروس و انتقال", items:["خانواده: Orthomyxoviridae، ۳ نوع: A، B، C","انتقال: <em>دراپلت</em> و کانتکت (نه ایربورن)"]},
+      {t:"Drift vs Shift", items:["<strong>Drift:</strong> جهش کوچک → اپیدمی فصلی","<strong>Shift:</strong> بازآرایی ژنتیکی → پاندمی"]},
+      {t:"طبقه‌بندی شدت", items:["غیرعارضه‌دار: ۲-۳ روز سیستمیک، ۵-۷ روز تنفسی","پیشرونده: تب > ۷۲ ساعت","عارضه‌دار: پنومونی، CNS، رابدومیولیز"]},
+      {t:"درمان", items:["زمان طلایی: <strong>۴۸ ساعت اول</strong>","دارو: <em>اوسلتامیویر</em> ۷۵mg هر ۱۲ ساعت × ۵ روز","آمانتادین و ریمانتادین: بی‌اثر"]},
+      {t:"گروه‌های پرخطر", items:["< ۵ سال (به‌ویژه < ۲ سال)، > ۶۵ سال، بارداری","نقص ایمنی، دیابت، بیماری قلبی-ریوی، BMI > ۳۰"]},
+      {t:"پیشگیری", items:["واکسن: <em>اواخر شهریور و مهرماه</em>","اثر: ۵۰-۶۰٪ پیشگیری ابتلا، > ۹۰٪ پیشگیری مرگ"]},
+      {t:"تله‌های طلایی", items:["H3N2: هنوز غالب","آسپیرین در کودکان: <em>سندرم رای</em>","علائم سیستمیک: زودتر از تنفسی"]}
+    ]},
+    {num:"۱۴", title:"ریکتزیا", branches:[
+      {t:"مشخصات", items:["باکتری گرم منفی، داخل سلولی اجباری","ناقل: کنه (برخی: شپش، کک)","مکانیسم علائم: <em>واسکولیت عروق کوچک</em>"]},
+      {t:"بیماری‌های اصلی", items:["<strong>MSF:</strong> R. conorii — راش ۹۷-۹۹٪، اسکار ۷۰٪","<strong>RMSF:</strong> R. rickettsii — راش ۹۰٪، اسکار <em>۰٪</em>"]},
+      {t:"تظاهرات بالینی", items:["تب + راش + سابقه گزش کنه","Tache noire (اسکار سیاه) در MSF","RMSF: راش از مچ دست و پا به سمت تنه"]},
+      {t:"درمان", items:["داروی انتخابی همه سنین و بارداری: <em>داکسی‌سیکلین</em>","کودک < ۴۵ kg: ۲.۲ mg/kg دو بار در روز","مدت: ۵-۷ روز"]},
+      {t:"تشخیص", items:["سرولوژی (IFA/MIF/ELISA): ۱۰-۱۴ روز پس از علائم","بیوپسی راش یا اسکار"]},
+      {t:"تله‌های طلایی", items:["RMSF اسکار ندارد (۰٪)","MSF در ایران: اشتباه با CCHF"]}
+    ]},
+    {num:"۱۵", title:"کیست هیداتید", branches:[
+      {t:"مشخصات", items:["عامل: <em>Echinococcus granulosus</em>","میزبان اصلی: سگ‌سانان | واسط: گوسفند، بز، خوک","انسان: <strong>میزبان اتفاقی</strong> (بن‌بست چرخه)"]},
+      {t:"انتقال و درگیری", items:["انتقال: خوردن تخم انگل (سبزی آلوده به مدفوع سگ)","انتقال انسان به انسان: <em>وجود ندارد</em>","درگیری: کبد ۷۰٪، ریه ۲۵٪، سایر ۵٪"]},
+      {t:"تظاهرات", items:["کبد: RUQ، یرقان، سندروم بودکیاری","ریه: سرفه، خلط خونی، پارگی بیشتر","پارگی کبد → شوک آنافیلاکسی"]},
+      {t:"تشخیص", items:["سونوگرافی: خط اول (<em>Daughter cyst = تشخیص قطعی</em>)","CT: در پارگی صفراوی | سرولوژی IgG"]},
+      {t:"درمان", items:["دارو: <em>آلبندازول</em> ۱۰-۱۵ mg/kg","PAIR: آسپیراسیون + تزریق سالین ۲۰٪ یا الکل ۹۵٪","کیست ریه، قلب، مغز: <em>جراحی اجباری</em>","آلبندازول ۱ هفته قبل و ۴ هفته بعد از جراحی"]},
+      {t:"تله‌های طلایی", items:["در دام‌ها: ریه بیشتر | در انسان: کبد بیشتر","انتقال انسان به انسان: وجود ندارد","نوع آلوئولار (E. multilocularis): ایران نیست"]}
+    ]},
+    {num:"۱۶", title:"استئومیلیت و آرتریت سپتیک", branches:[
+      {t:"مفاهیم", items:["استئومیلیت: عفونت پارانشیم استخوان","آرتریت سپتیک: عفونت فضای مفصل","شایع‌ترین راه ورود: <em>مجاورت</em>","شایع‌ترین میکروب: <em>استاف اورئوس</em>"]},
+      {t:"افتراق کلیدی", items:["<strong>ROM:</strong> نرمال در استئومیلیت، کاهش‌یافته در آرتریت سپتیک","تشخیص استئومیلیت: MRI + کشت خون","تشخیص آرتریت سپتیک: آرتروسنتز"]},
+      {t:"اسپوندیلیت", items:["پایوژن: تدریجی، مرد > ۵۰ سال","بروسلا: افزایش‌یابنده ۶ ماه","سل: افزایش‌یابنده ۳-۴ ماه","درد <em>نه فعالیتی نه پوزیشنال</em>"]},
+      {t:"اتیولوژی خاص", items:["آنمی داسی‌شکل: <em>Salmonella</em> + استاف","پای دیابتی/زخم فشاری: پلی‌میکروبیال (MRSA + سودوموناس + بی‌هوازی)","جوان فعال جنسی + ضایعات پوستی: <em>نایسریا گنوره</em>"]},
+      {t:"درمان", items:["تجربی: وانکومایسین + سفتریاکسون","کلیندامایسین: نفوذ خوب، مقاومت زیاد","وانکومایسین: نفوذ ضعیف، مقاومت کم","مدت: ۴ هفته"]},
+      {t:"اندیکاسیون جراحی", items:["استئومیلیت: <em>بروز علائم عصبی</em>","آرتریت: درناژ جراحی هیپ و شانه"]},
+      {t:"مایع مفصلی", items:["آرتریت سپتیک: WBC > ۵۰,۰۰۰ (> ۷۵٪ نوتروفیل)، قند پایین"]}
+    ]},
+    {num:"۱۷", title:"آنتی‌بیوتیک‌ها و اصول درمان", branches:[
+      {t:"طبقه‌بندی", items:["بالای دیافراگم: AOM، سینوزیت، فارنژیت، پنومونی","زیر دیافراگم: UTI، PID، کلانژیت، اسهال"]},
+      {t:"طیف اثر - کلیدی", items:["آموکسی‌سیلین: AOM بدون فاکتور خطر","آموکسی‌کلاو: AOM با فاکتور خطر","کلیندامایسین: <em>باکتریواستاتیک</em> (نه باکتریمی استاف)","سفتریاکسون: مننژیت (نه در شوک سپتیک)","سفپیم/سفتازیدیم: ضد سودوموناس","لینزولید: مهار MAO → <em>سندرم سروتونین</em>","ایمی‌پنم: خطر تشنج | مروپنم: جایگزین مطمئن"]},
+      {t:"ممنوعیت‌ها", items:["بارداری: داکسی‌سیکلین، سیپروفلوکساسین، مترونیدازول (سه‌ماهه اول)","< ۸ سال: تتراسیکلین‌ها","مترونیدازول: <em>هرگز تنها</em> برای بی‌هوازی بالای دیافراگم"]},
+      {t:"تنظیم دوز کلیوی", items:["نیاز به تنظیم: آمینوگلیکوزید، وانکومایسین، کینولون","نیاز <em>ندارد</em>: سفتریاکسون، آزیترومایسین، کاسپوفونژین"]},
+      {t:"عوارض کلیدی", items:["فلوروکینولون: <em>پارگی تاندون آشیل</em>","آمینوگلیکوزید: نفروتوکسیسیتی + اوتوتوکسیسیتی","وانکومایسین سریع: <em>Red man syndrome</em>"]},
+      {t:"اصول درمان تجربی", items:["سپسیس: محدودیت زمانی، اولویت ABC","شوک سپتیک منبع شکمی: کارباپنم","مرگ‌ومیر: در بارداری کمتر نیست"]},
+      {t:"در حال حذف از خط اول", items:["کوتریموکسازول (فقط سیستیت)","سفوروکسیم، سفتازیدیم (مقاومت)"]}
+    ]},
+    {num:"۱۸", title:"سپسیس و FUO", branches:[
+      {t:"تعاریف", items:["<strong>SIRS:</strong> ≥ ۲ معیار (تب، تاکی‌کاردی، تاکی‌پنه، لکوسیتوز/لکوپنی)","<strong>Sepsis:</strong> عفونت + اختلال عملکرد ارگان","<strong>Septic shock:</strong> هیپوتانسیون مقاوم + لاکتات بالا","<strong>FUO:</strong> تب > ۳ هفته، > ۳۸.۳°C، بدون تشخیص"]},
+      {t:"qSOFA", items:["RR ≥ ۲۲ | تغییر هوشیاری | SBP < ۱۰۰ mmHg","نبض > ۹۰: <em>جزو qSOFA نیست</em>"]},
+      {t:"FUO - اتیولوژی", items:["عفونت: TB، اندوکاردیت، آبسه","بدخیمی: لنفوم، لوسمی","روماتولوژیک: Still، SLE، JRA","متفرقه: DVT، دارو، تیروئید","<em>تومور مغزی: FUO نیست</em>"]},
+      {t:"الگوهای تب", items:["Intermittent: بازگشت به نرمال","<strong>Remittent:</strong> نوسان، <em>بدون</em> بازگشت به نرمال","Continuous: ثابت | Relapsing: دوره‌ای"]},
+      {t:"عفونت‌های بیمارستانی", items:["شایع‌ترین: عفونت ادراری (CAUTI)","پاتوژن شایع: <em>Pseudomonas aeruginosa</em>","پنومونی وابسته به ونتیلاتور"]},
+      {t:"تظاهرات پوستی", items:["پتشی: منشأ عروقی | کهیر: Blanching","پورپورا: Non-blanching | واسکولیت: پورپورای قابل لمس"]},
+      {t:"تله‌های طلایی", items:["هیپوترمی: پیش‌آگهی بدتر از تب بالا","اولویت در شوک سپتیک: <em>ABC</em>","سفتریاکسون در شوک سپتیک مطمئن نیست","قانون ۳ و ۳: تب > ۳ هفته، > ۳۸.۳°C، ۳ ویزیت سرپایی"]}
+    ]}
+  ];
+
+  /* ==================== HELPERS ==================== */
+  function esc(s){
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function levelTag(level){
+    var m = {easy:["آسان","easy"], medium:["متوسط","medium"], hard:["سخت","hard"]};
+    var t = m[level] || m.medium;
+    return '<span class="q-tag q-tag-'+t[1]+'">'+t[0]+'</span>';
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+  function getAllQuestions(){
+    var out = [];
+    for (var s = 0; s < BANK.length; s++){
+      var sec = BANK[s];
+      for (var i = 0; i < sec.items.length; i++){
+        var q = sec.items[i];
+        out.push({
+          n: q.n, level: q.level, q: q.q, opts: q.opts,
+          correct: q.correct, exp: q.exp, section: sec.section
+        });
+      }
+    }
+    return out;
+  }
+
+  /* ==================== RENDER: BANK ==================== */
+  function renderBank(){
+    var root = document.getElementById("qbank-root");
+    if (!root) return;
+    var html = "";
+    for (var s = 0; s < BANK.length; s++){
+      var sec = BANK[s];
+      html += '<div class="qbank-section">'+esc(sec.section)+'</div>';
+      for (var i = 0; i < sec.items.length; i++){
+        var q = sec.items[i];
+        var optsHtml = "";
+        for (var o = 0; o < q.opts.length; o++){
+          // همه گزینه‌ها یکسان نمایش داده می‌شوند (بدون علامت صحیح)
+          optsHtml += '<li><span class="opt-l">'+esc(q.opts[o][0])+')</span><span>'+esc(q.opts[o][1])+'</span></li>';
+        }
+        var correctLetter = q.opts[q.correct] ? q.opts[q.correct][0] : "";
+        var cardId = "q-" + q.n;
+        html += ''
+          + '<div class="q-card" data-qid="'+cardId+'">'
+          +   '<div class="q-card-head">'
+          +     '<span class="q-card-num">'+q.n+'</span>'
+          +     '<div class="q-card-text">'+levelTag(q.level)+esc(q.q)+'</div>'
+          +   '</div>'
+          +   '<ul class="q-card-options">'+optsHtml+'</ul>'
+          +   '<button class="q-reveal" type="button" data-target="'+cardId+'-ans">'
+          +     '<span class="reveal-label">نمایش پاسخ و توضیح</span>'
+          +     '<span class="arrow-ico">▾</span>'
+          +   '</button>'
+          +   '<div class="q-answer-box" id="'+cardId+'-ans" style="display:none">'
+          +     '<span class="lbl">پاسخ صحیح: '+esc(correctLetter)+'</span>'
+          +     '<div class="txt">'+esc(q.exp)+'</div>'
+          +   '</div>'
+          + '</div>';
+      }
+    }
+    root.innerHTML = html;
+
+    var btns = root.querySelectorAll(".q-reveal");
+    for (var b = 0; b < btns.length; b++){
+      btns[b].addEventListener("click", function(){
+        var targetId = this.getAttribute("data-target");
+        var box = document.getElementById(targetId);
+        if (!box) return;
+        var isOpen = box.style.display !== "none";
+        if (isOpen){
+          box.style.display = "none";
+          this.classList.remove("open");
+          this.querySelector(".reveal-label").textContent = "نمایش پاسخ و توضیح";
+        } else {
+          box.style.display = "block";
+          this.classList.add("open");
+          this.querySelector(".reveal-label").textContent = "پنهان کردن پاسخ";
+        }
+      });
+    }
+  }
+
+  /* ==================== RENDER: MINDMAP ==================== */
+  function renderMindmap(){
+    var root = document.getElementById("mindmap-root");
+    if (!root) return;
+    var html = "";
+    for (var s = 0; s < MINDMAP.length; s++){
+      var sec = MINDMAP[s];
+      var branchesHtml = "";
+      for (var b = 0; b < sec.branches.length; b++){
+        var br = sec.branches[b];
+        var itemsHtml = "";
+        for (var i = 0; i < br.items.length; i++){
+          itemsHtml += '<li>'+br.items[i]+'</li>';
+        }
+        branchesHtml += '<div class="mm-branch"><div class="mm-branch-title">'+esc(br.t)+'</div><ul class="mm-list">'+itemsHtml+'</ul></div>';
+      }
+      html += ''
+        + '<details class="mm-section" '+(s===0?'open':'')+'>'
+        +   '<summary class="mm-head">'
+        +     '<span class="mm-num">'+esc(sec.num)+'</span>'
+        +     '<span class="mm-title">'+esc(sec.title)+'</span>'
+        +     '<span class="mm-chev" aria-hidden="true">▾</span>'
+        +   '</summary>'
+        +   '<div class="mm-body">'+branchesHtml+'</div>'
+        + '</details>';
+    }
+    root.innerHTML = html;
+  }
+
+  /* ==================== TEST ENGINE ==================== */
+  var TEST_KEY = "medex.test.v2";
+  var testState = null;
+  var timerHandle = null;
+
+  function saveTest(){ try { localStorage.setItem(TEST_KEY, JSON.stringify(testState)); } catch(e){} }
+  function loadTest(){ try { var raw = localStorage.getItem(TEST_KEY); return raw ? JSON.parse(raw) : null; } catch(e){ return null; } }
+  function clearTest(){ try { localStorage.removeItem(TEST_KEY); } catch(e){} }
+
+  function renderTestSetup(){
+    var container = document.getElementById("test-container");
+    if (!container) return;
+    var allQ = getAllQuestions();
+    var createdCount = allQ.length;
+    var combined = createdCount;
+
+    var resumeHtml = "";
+    var saved = loadTest();
+    if (saved && !saved.finished){
+      resumeHtml = ''
+        + '<div class="resume-box">'
+        +   '<div class="ico">▸</div>'
+        +   '<div class="txt">یک آزمون نیمه‌تمام دارید ('+saved.answers.filter(function(a){return a!==null;}).length+' از '+saved.questions.length+' پاسخ داده شده)</div>'
+        +   '<button type="button" id="btn-resume">ادامه</button>'
+        + '</div>';
+    }
+    var resultHtml = "";
+    if (saved && saved.finished){
+      resultHtml = ''
+        + '<div class="resume-box" style="background:linear-gradient(135deg,#E8F8F0,#D5F0E0);border-color:#A8DFC0">'
+        +   '<div class="ico" style="background:#D5F5E3;color:#1e8449">✓</div>'
+        +   '<div class="txt" style="color:#1e6a3a">آزمون قبلی تمام شده است. کارنامه آماده مشاهده است.</div>'
+        +   '<button type="button" id="btn-show-result" style="background:#1e8449">مشاهده کارنامه</button>'
+        + '</div>';
+    }
+
+    container.innerHTML = ''
+      + resumeHtml
+      + resultHtml
+      + '<div class="setup-card">'
+      +   '<div class="setup-group">'
+      +     '<span class="setup-label">منبع سؤالات</span>'
+      +     '<div class="setup-options" id="source-opts">'
+      +       '<button class="setup-chip active" type="button" data-src="created">تألیفی</button>'
+      +       '<button class="setup-chip" type="button" data-src="past" disabled style="opacity:.45;cursor:not-allowed">منتخب (به‌زودی)</button>'
+      +       '<button class="setup-chip" type="button" data-src="both">هردو</button>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div class="setup-group">'
+      +     '<span class="setup-label">تعداد سؤال</span>'
+      +     '<div class="setup-options" id="count-opts">'
+      +       '<button class="setup-chip" type="button" data-count="10">۱۰</button>'
+      +       '<button class="setup-chip active" type="button" data-count="20">۲۰</button>'
+      +       '<button class="setup-chip" type="button" data-count="50">۵۰</button>'
+      +       '<button class="setup-chip" type="button" data-count="all">همه</button>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div class="setup-group">'
+      +     '<span class="setup-label">زمان آزمون</span>'
+      +     '<div class="setup-options" id="time-opts">'
+      +       '<button class="setup-chip" type="button" data-time="0">بدون محدودیت</button>'
+      +       '<button class="setup-chip" type="button" data-time="10">۱۰ دقیقه</button>'
+      +       '<button class="setup-chip active" type="button" data-time="20">۲۰ دقیقه</button>'
+      +       '<button class="setup-chip" type="button" data-time="30">۳۰ دقیقه</button>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div class="setup-info">'
+      +     '<span>سؤالات موجود</span>'
+      +     '<strong>'+combined+'</strong>'
+      +   '</div>'
+      +   '<button class="cta-btn" type="button" id="start-test">شروع آزمون</button>'
+      + '</div>';
+
+    function bindChips(groupId){
+      var grp = document.getElementById(groupId);
+      if (!grp) return;
+      grp.addEventListener("click", function(ev){
+        var btn = ev.target.closest(".setup-chip");
+        if (!btn || btn.disabled) return;
+        var chips = grp.querySelectorAll(".setup-chip");
+        for (var i = 0; i < chips.length; i++) chips[i].classList.remove("active");
+        btn.classList.add("active");
+      });
+    }
+    bindChips("source-opts");
+    bindChips("count-opts");
+    bindChips("time-opts");
+
+    var st = document.getElementById("start-test");
+    if (st) st.addEventListener("click", function(){
+      var src = document.querySelector("#source-opts .setup-chip.active").getAttribute("data-src");
+      var cnt = document.querySelector("#count-opts .setup-chip.active").getAttribute("data-count");
+      var tm = parseInt(document.querySelector("#time-opts .setup-chip.active").getAttribute("data-time"), 10);
+      startTest(src, cnt, tm);
+    });
+    var br = document.getElementById("btn-resume");
+    if (br) br.addEventListener("click", function(){
+      testState = saved;
+      if (!testState) return;
+      renderTestRunning();
+      if (testState.timeLimit > 0) startTimer();
+    });
+    var bsr = document.getElementById("btn-show-result");
+    if (bsr) bsr.addEventListener("click", function(){
+      testState = saved;
+      if (!testState) return;
+      renderTestResult();
+    });
+  }
+
+  function startTest(src, cnt, timeMin){
+    var pool = [];
+    if (src === "created" || src === "both") pool = pool.concat(getAllQuestions());
+    if (pool.length === 0){ alert("سؤالی برای این منبع موجود نیست."); return; }
+    var count = cnt === "all" ? pool.length : Math.min(parseInt(cnt,10), pool.length);
+    var selected = shuffle(pool).slice(0, count);
+
+    testState = {
+      source: src,
+      count: selected.length,
+      timeLimit: timeMin * 60,
+      remaining: timeMin * 60,
+      startedAt: Date.now(),
+      questions: selected,
+      answers: new Array(selected.length).fill(null),
+      currentIdx: 0,
+      finished: false
+    };
+    saveTest();
+    renderTestRunning();
+    startTimer();
+  }
+
+  function startTimer(){
+    stopTimer();
+    if (!testState || testState.timeLimit === 0) return;
+    timerHandle = setInterval(function(){
+      if (!testState || testState.finished){ stopTimer(); return; }
+      testState.remaining--;
+      if (testState.remaining <= 0){
+        testState.remaining = 0;
+        saveTest();
+        stopTimer();
+        finishTest(true);
+        return;
+      }
+      saveTest();
+      updateTimerDisplay();
+    }, 1000);
+  }
+  function stopTimer(){ if (timerHandle){ clearInterval(timerHandle); timerHandle = null; } }
+  function updateTimerDisplay(){
+    var el = document.getElementById("q-timer");
+    if (!el || !testState) return;
+    if (testState.timeLimit === 0){ el.textContent = "∞"; el.classList.remove("warn"); return; }
+    var r = testState.remaining;
+    var m = Math.floor(r / 60), s = r % 60;
+    el.textContent = (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+    if (r <= 60) el.classList.add("warn"); else el.classList.remove("warn");
+  }
+
+  function renderTestRunning(){
+    var container = document.getElementById("test-container");
+    if (!container || !testState) return;
+    var q = testState.questions[testState.currentIdx];
+    var idx = testState.currentIdx;
+    var total = testState.questions.length;
+    var answered = testState.answers.filter(function(a){return a!==null;}).length;
+    var pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+    var sel = testState.answers[idx];
+
+    var optsHtml = "";
+    for (var o = 0; o < q.opts.length; o++){
+      var cls = "test-opt" + (sel === o ? " selected" : "");
+      optsHtml += '<button class="'+cls+'" type="button" data-opt="'+o+'">'
+                +   '<span class="opt-letter">'+esc(q.opts[o][0])+'</span>'
+                +   '<span class="opt-text">'+esc(q.opts[o][1])+'</span>'
+                + '</button>';
+    }
+
+    container.innerHTML = ''
+      + '<div class="test-topbar">'
+      +   '<div class="q-counter">سؤال <strong>'+(idx+1)+'</strong> از <strong>'+total+'</strong></div>'
+      +   '<div class="q-timer" id="q-timer">--:--</div>'
+      + '</div>'
+      + '<div class="q-progress"><div class="q-progress-bar" style="width:'+pct+'%"></div></div>'
+      + '<div class="test-q">'
+      +   '<div class="test-q-text">'+levelTag(q.level)+esc(q.q)+'</div>'
+      +   optsHtml
+      + '</div>'
+      + '<div class="test-nav">'
+      +   (idx > 0 ? '<button class="cta-btn prev" type="button" id="btn-prev">قبلی</button>' : '')
+      +   (idx < total-1
+            ? '<button class="cta-btn next" type="button" id="btn-next">بعدی</button>'
+            : '<button class="cta-btn next" type="button" id="btn-finish">پایان آزمون</button>')
+      + '</div>'
+      + '<div style="text-align:center;margin-top:12px">'
+      +   '<button type="button" id="btn-abort" style="font-size:11.5px;color:var(--muted);text-decoration:underline;padding:6px 10px">لغو آزمون</button>'
+      + '</div>';
+
+    updateTimerDisplay();
+
+    var optBtns = container.querySelectorAll(".test-opt");
+    for (var i = 0; i < optBtns.length; i++){
+      optBtns[i].addEventListener("click", function(){
+        var o = parseInt(this.getAttribute("data-opt"), 10);
+        testState.answers[testState.currentIdx] = o;
+        saveTest();
+        renderTestRunning();
+      });
+    }
+    var bp = document.getElementById("btn-prev");
+    if (bp) bp.addEventListener("click", function(){
+      if (testState.currentIdx > 0){ testState.currentIdx--; saveTest(); renderTestRunning(); }
+    });
+    var bn = document.getElementById("btn-next");
+    if (bn) bn.addEventListener("click", function(){
+      if (testState.currentIdx < testState.questions.length - 1){ testState.currentIdx++; saveTest(); renderTestRunning(); }
+    });
+    var bf = document.getElementById("btn-finish");
+    if (bf) bf.addEventListener("click", function(){
+      var unanswered = testState.answers.filter(function(a){return a===null;}).length;
+      var msg = unanswered > 0
+        ? "هنوز "+unanswered+" سؤال بی‌پاسخ دارید. آیا مطمئنید؟"
+        : "آزمون را تمام کنید؟";
+      if (!confirm(msg)) return;
+      finishTest(false);
+    });
+    var ba = document.getElementById("btn-abort");
+    if (ba) ba.addEventListener("click", function(){
+      if (!confirm("لغو آزمون و بازگشت به تنظیمات؟")) return;
+      stopTimer();
+      clearTest();
+      testState = null;
+      renderTestSetup();
+    });
+  }
+
+  function finishTest(auto){
+    stopTimer();
+    testState.finished = true;
+    testState.finishedAt = Date.now();
+    testState.autoFinished = !!auto;
+    saveTest();
+    renderTestResult();
+  }
+
+  function renderTestResult(){
+    var container = document.getElementById("test-container");
+    if (!container || !testState) return;
+    var total = testState.questions.length;
+    var correct = 0, wrong = 0, unanswered = 0;
+    for (var i = 0; i < total; i++){
+      var a = testState.answers[i];
+      if (a === null) unanswered++;
+      else if (a === testState.questions[i].correct) correct++;
+      else wrong++;
+    }
+    var pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+    var verdict, vclass;
+    if (pct >= 80){ verdict = "عالی — آماده‌ای"; vclass = "good"; }
+    else if (pct >= 60){ verdict = "خوب — نیاز به مرور"; vclass = "mid"; }
+    else { verdict = "نیاز به مطالعه بیشتر"; vclass = "bad"; }
+
+    var reviewHtml = "";
+    var reviewCount = 0;
+    for (var j = 0; j < total; j++){
+      var q = testState.questions[j];
+      var ans = testState.answers[j];
+      var isCorrect = (ans === q.correct);
+      var isUnanswered = (ans === null);
+      if (isCorrect) continue;
+      reviewCount++;
+      var cls = isUnanswered ? "unanswered" : "wrong";
+      var ansLine = "";
+      if (isUnanswered){
+        ansLine = '<div class="review-line wrong"><span class="lbl">پاسخ شما:</span> بی‌پاسخ</div>';
+      } else {
+        ansLine = '<div class="review-line wrong"><span class="lbl">پاسخ شما:</span> '+esc(q.opts[ans][0])+') '+esc(q.opts[ans][1])+'</div>';
+      }
+      var correctLine = '<div class="review-line correct"><span class="lbl">پاسخ صحیح:</span> '+esc(q.opts[q.correct][0])+') '+esc(q.opts[q.correct][1])+'</div>';
+      reviewHtml += ''
+        + '<div class="review-item '+cls+'">'
+        +   '<div class="review-q"><span class="review-num">'+(j+1)+'</span>'+levelTag(q.level)+esc(q.q)+'</div>'
+        +   ansLine
+        +   correctLine
+        +   '<div class="review-exp"><span class="lbl">توضیح</span><div class="txt">'+esc(q.exp)+'</div></div>'
+        + '</div>';
+    }
+    if (reviewCount === 0){
+      reviewHtml = '<div class="empty-box"><div class="empty-icon" aria-hidden="true">✓</div>همه سؤالات را درست پاسخ دادی.</div>';
+    }
+
+    container.innerHTML = ''
+      + '<div class="result-hero">'
+      +   '<small>کارنامه آزمون</small>'
+      +   '<div class="result-percent">'+pct+'<span>٪</span></div>'
+      +   '<p>'+correct+' از '+total+' سؤال درست</p>'
+      +   '<div class="verdict '+vclass+'">'+verdict+'</div>'
+      + '</div>'
+      + '<div class="result-stats">'
+      +   '<div class="result-stat good"><div class="num">'+correct+'</div><div class="lbl">صحیح</div></div>'
+      +   '<div class="result-stat bad"><div class="num">'+wrong+'</div><div class="lbl">غلط</div></div>'
+      +   '<div class="result-stat mute"><div class="num">'+unanswered+'</div><div class="lbl">بی‌پاسخ</div></div>'
+      +   '<div class="result-stat"><div class="num">'+total+'</div><div class="lbl">کل</div></div>'
+      + '</div>'
+      + '<div class="result-actions">'
+      +   '<button class="cta-btn" type="button" id="btn-retry">آزمون جدید</button>'
+      +   '<button class="cta-btn secondary" type="button" id="btn-back-home">بازگشت به صفحه درس</button>'
+      + '</div>'
+      + (reviewCount > 0
+          ? '<div style="margin-top:22px;margin-bottom:8px;font-size:13px;font-weight:700;color:var(--navy);padding-right:4px">مرور اشتباهات و توضیحات</div><div class="review-list">'+reviewHtml+'</div>'
+          : '<div class="review-list">'+reviewHtml+'</div>');
+
+    var brt = document.getElementById("btn-retry");
+    if (brt) brt.addEventListener("click", function(){
+      clearTest();
+      testState = null;
+      renderTestSetup();
+    });
+    var bbh = document.getElementById("btn-back-home");
+    if (bbh) bbh.addEventListener("click", function(){
+      showPage("courseHome");
+    });
+  }
+
+  /* ==================== NAV ==================== */
+  var COURSES = {
+    infectious: { title: "تئوری عفونی", desc: "مرور و ارزیابی مباحث امتحان" },
+    surgery:    { title: "کورس جراحی", desc: "آمادگی برای امتحان" }
+  };
+  var STORAGE_KEY = "medex.v1";
+  function saveState(s){ try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch(e){} }
+  function loadState(){ try { var r = localStorage.getItem(STORAGE_KEY); return r ? JSON.parse(r) : null; } catch(e){ return null; } }
+
+  var pages = document.querySelectorAll(".page");
+  var app = document.querySelector(".app");
+  function getPage(id){ if (!id) return null; var el = document.getElementById(id); return el && el.classList.contains("page") ? el : null; }
+  var currentCourse = null;
+
+  function showPage(id, opts){
+    var target = getPage(id);
+    if (!target){
+      target = getPage("welcome");
+      if (!target) return;
+      id = "welcome";
+    }
+    for (var i = 0; i < pages.length; i++) pages[i].classList.remove("active");
+    target.classList.add("active");
+    try { window.scrollTo(0,0); } catch(e){}
+    if (!opts || opts.persist !== false) saveState({ page: id, course: currentCourse });
+
+    if (id === "test"){
+      var saved = loadTest();
+      if (testState && testState.finished){
+        renderTestResult();
+      } else if (testState && !testState.finished){
+        renderTestRunning();
+        if (testState.timeLimit > 0) startTimer();
+      } else if (saved && saved.finished){
+        testState = saved;
+        renderTestResult();
+      } else if (saved && !saved.finished){
+        testState = saved;
+        renderTestRunning();
+        if (testState.timeLimit > 0) startTimer();
+      } else {
+        renderTestSetup();
+      }
+    }
+  }
+
+  function openCourse(id){
+    var c = COURSES[id];
+    if (!c) return;
+    currentCourse = id;
+    var setText = function(elId, txt){ var el = document.getElementById(elId); if (el) el.textContent = txt; };
+    setText("selectedCourse", c.title);
+    setText("courseDescription", c.desc);
+    setText("heroTitle", c.title);
+    setText("heroSub", "مسیر مطالعه");
+    setText("summaryCourse", "مایندمپ جامع عفونی");
+    setText("testCourse", c.title);
+    showPage("courseHome");
+  }
+
+  app.addEventListener("click", function(ev){
+    var t = ev.target;
+    if (!t || !t.closest) return;
+    var navBtn = t.closest("[data-nav]");
+    if (navBtn){ showPage(navBtn.getAttribute("data-nav")); return; }
+    var courseBtn = t.closest("[data-course]");
+    if (courseBtn){ openCourse(courseBtn.getAttribute("data-course")); return; }
+  });
+
+  /* ==================== BOOT ==================== */
+  renderBank();
+  renderMindmap();
+  renderTestSetup();
+
+  var savedTest = loadTest();
+  if (savedTest){ testState = savedTest; }
+
+  window.MedEx = {
+    showPage: showPage,
+    openCourse: openCourse,
+    version: "3.2.0",
+    bankSize: getAllQuestions().length
+  };
+
+})();
+</script>
+</body>
+</html>
